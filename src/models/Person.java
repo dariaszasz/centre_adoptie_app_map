@@ -11,7 +11,7 @@ public abstract class Person {
         this.kontaktDetails = kontaktDetails;
     }
 
-    // Getter und Setter
+    // Getter and Setter
     public int getId() {
         return id;
     }

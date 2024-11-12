@@ -15,7 +15,7 @@ public class Gesundheitsakte {
         this.tierarzt = tierarzt;
     }
 
-    // Getter und Setter
+    // Getter and Setter
     public int getId() {
         return id;
     }

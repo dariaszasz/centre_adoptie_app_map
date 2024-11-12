@@ -9,8 +9,7 @@ public class Adoptionsantrag {
     private Adoptant adoptant;
     private Tier tier;
     private Date datumAntrag;
-    private String status; // z.B. genehmigt, abgelehnt, ausstehend
-
+    private String status; // ex. approved, rejected, pending
     public Adoptionsantrag(int id, Adoptant adoptant, Tier tier, Date datumAntrag, String status) {
         this.id = id;
         this.adoptant = adoptant;
@@ -19,7 +18,7 @@ public class Adoptionsantrag {
         this.status = status;
     }
 
-    // Getter und Setter
+    // Getter and Setter
     public int getId() {
         return id;
     }
