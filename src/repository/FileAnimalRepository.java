@@ -12,8 +12,7 @@ public class FileAnimalRepository implements IAnimalRepository {
 
     public FileAnimalRepository() {
         this.animals = new ArrayList<>();
-        loadAnimalsFromFile();  // Încarcă animalele din fișier la început
-    }
+        loadAnimalsFromFile();
 
     @Override
     public List<Tier> getAllAnimals() {
@@ -23,13 +22,13 @@ public class FileAnimalRepository implements IAnimalRepository {
     @Override
     public void addAnimal(Tier animal) {
         animals.add(animal);
-        saveAnimalsToFile();  // Salvează animalele în fișier după ce adaugi un animal
+        saveAnimalsToFile();
     }
 
     @Override
     public void removeAnimal(int id) {
         animals.removeIf(animal -> animal.getId() == id);
-        saveAnimalsToFile();  // Salvează animalele în fișier după ce ștergi un animal
+        saveAnimalsToFile();
     }
 
     @Override
@@ -40,7 +39,7 @@ public class FileAnimalRepository implements IAnimalRepository {
                 break;
             }
         }
-        saveAnimalsToFile();  // Salvează animalele în fișier după ce schimbi statusul
+        saveAnimalsToFile();
     }
 
     @Override
@@ -58,21 +57,19 @@ public class FileAnimalRepository implements IAnimalRepository {
         return null;  // Returnează null dacă nu găsești animalul
     }
 
-    // Metodă pentru a încărca animalele din fișier
     private void loadAnimalsFromFile() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
             animals = (List<Tier>) ois.readObject();  // Citește lista de animale din fișier
         } catch (FileNotFoundException e) {
-            System.out.println("Fișierul nu există încă. Se va crea unul nou.");
+            System.out.println("The file does not exist yet. A new one will be created.");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    // Metodă pentru a salva animalele într-un fișier
     private void saveAnimalsToFile() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
-            oos.writeObject(animals);  // Salvează lista de animale în fișier
+            oos.writeObject(animals);
         } catch (IOException e) {
             e.printStackTrace();
         }
