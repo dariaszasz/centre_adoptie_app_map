@@ -11,7 +11,7 @@ public class Pflegeprogramm {
         this.medizinischeVersorgung = medizinischeVersorgung;
     }
 
-    // Getter und Setter
+    // Getter and Setter
     public int getId() {
         return id;
     }
