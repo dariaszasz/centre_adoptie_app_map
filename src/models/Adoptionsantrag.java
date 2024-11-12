@@ -1,6 +1,6 @@
 package models;
 
-import src.models.Adoptant;
+import models.Adoptant;
 
 import java.util.Date;
 
