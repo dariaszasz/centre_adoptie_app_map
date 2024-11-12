@@ -13,6 +13,7 @@ public class FileAnimalRepository implements IAnimalRepository {
     public FileAnimalRepository() {
         this.animals = new ArrayList<>();
         loadAnimalsFromFile();
+    }
 
     @Override
     public List<Tier> getAllAnimals() {
@@ -54,8 +55,9 @@ public class FileAnimalRepository implements IAnimalRepository {
                 return animal;
             }
         }
-        return null;  // Returnează null dacă nu găsești animalul
+        return null;
     }
+
 
     private void loadAnimalsFromFile() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
@@ -67,6 +69,7 @@ public class FileAnimalRepository implements IAnimalRepository {
         }
     }
 
+
     private void saveAnimalsToFile() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
             oos.writeObject(animals);
@@ -75,4 +78,3 @@ public class FileAnimalRepository implements IAnimalRepository {
         }
     }
 }
-
