@@ -1,11 +1,10 @@
 package controller;
 
-import service.AnimalService;
 import models.Tier;
 import models.Tierart;
+import service.AnimalService;
 
 import java.util.List;
-import java.util.Scanner;
 
 public class AnimalController {
     private AnimalService animalService;
