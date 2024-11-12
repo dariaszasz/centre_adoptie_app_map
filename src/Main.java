@@ -8,17 +8,17 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        // Numele fișierului în care vor fi salvate animalele
+        //name of the file where the animals will be saved
         String fileName = "animals.txt";
 
-        // Inițializăm repository-ul, serviciul și controller-ul
+        //initialisation of repo, service and controller
         InMemoryAnimalRepository animalRepository = new InMemoryAnimalRepository();
         AnimalService animalService = new AnimalService(animalRepository);
         AnimalController animalController = new AnimalController(animalService);
 
         Scanner scanner = new Scanner(System.in);
 
-        // Meniu principal repetitiv
+        //repetitive main menu 
         while (true) {
             System.out.println("Selectează tipul de utilizator:");
             System.out.println("1. Client");
@@ -35,7 +35,7 @@ public class Main {
                 employeeMenu.showMenu();
             } else if (userType == 0) {
                 System.out.println("Ieșire din aplicație.");
-                break;  // Oprește bucla și închide aplicația
+                break;  // stops the loop and closes the app
             } else {
                 System.out.println("Opțiune invalidă. Te rog să alegi din nou.");
             }
