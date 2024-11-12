@@ -13,3 +13,4 @@ public class Adoptant extends Person {
     public List<Adoptionsantrag> getAdoptionsAntraege() {
         return adoptionsAntraege;
     }
+}
