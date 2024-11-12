@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         //name of the file where the animals will be saved
-        String fileName = "animals.txt";
+        String fileName = "animale.txt";
 
         //initialisation of repo, service and controller
         InMemoryAnimalRepository animalRepository = new InMemoryAnimalRepository();
@@ -20,10 +20,10 @@ public class Main {
 
         //repetitive main menu 
         while (true) {
-            System.out.println("Selectează tipul de utilizator:");
+            System.out.println("Select user:");
             System.out.println("1. Client");
-            System.out.println("2. Angajat");
-            System.out.println("0. Ieșire");
+            System.out.println("2. Employee");
+            System.out.println("0. Exit");
 
             int userType = scanner.nextInt();
 
@@ -34,10 +34,10 @@ public class Main {
                 EmployeeMenu employeeMenu = new EmployeeMenu(animalController);
                 employeeMenu.showMenu();
             } else if (userType == 0) {
-                System.out.println("Ieșire din aplicație.");
+                System.out.println("Exit app.");
                 break;  // stops the loop and closes the app
             } else {
-                System.out.println("Opțiune invalidă. Te rog să alegi din nou.");
+                System.out.println("Invalid option. Please try again.");
             }
         }
     }
