@@ -31,6 +31,6 @@ public class AnimalService {
 
     public Tier getAnimalById(int id) {
         Optional<Tier> animal = animalRepository.findById(id);
-        return animal.orElse(null); // Dacă animalul nu există, returnează null
+        return animal.orElse(null);
     }
 }
