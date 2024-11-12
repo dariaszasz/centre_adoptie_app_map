@@ -14,31 +14,31 @@ public class AnimalController {
         this.animalService = animalService;
     }
 
-    // Funcția pentru vizualizarea animalelor disponibile
+    // function to see the available animals
     public List<Tier> viewAllAnimals() {
         return animalService.getAllAnimals();
     }
 
-    // Funcția pentru a adăuga un animal
+    //function to add an animal 
     public void addAnimal(Tier animal) {
         animalService.addAnimal(animal);
     }
 
-    // Funcția pentru a șterge un animal
+    // function to delete an animal
     public void removeAnimal(int id) {
         animalService.removeAnimal(id);
     }
 
-    // Funcția pentru a schimba statusul unui animal
+    //function to change the status
     public void updateAnimalStatus(int id, String status) {
         animalService.updateAnimalStatus(id, status);
     }
 
-    // Funcția pentru a adopta un animal
+    // function to adopt
     public void adoptAnimal(int animalId) {
         Tier animal = animalService.getAnimalById(animalId);
         if (animal != null) {
-            // Logica de adoptie - schimbarea statusului animalului in "adoptat"
+            // logic of adoption - changing the status of an animal to "adopted"
             animal.setStatus("adoptat");
             updateAnimalStatus(animalId, "adoptat");
             System.out.println("Animalul a fost adoptat!");
