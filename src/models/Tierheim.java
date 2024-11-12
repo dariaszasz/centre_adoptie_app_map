@@ -19,7 +19,7 @@ public class Tierheim {
         this.tierärzte = tierärzte;
     }
 
-    // Getter und Setter
+    // Getter and Setter
     public int getId() {
         return id;
     }
