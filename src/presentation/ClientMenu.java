@@ -1,3 +1,4 @@
+/*
 package presentation;
 
 import controller.AnimalController;
@@ -43,3 +44,54 @@ public class ClientMenu {
     }
 }
 
+ */
+
+package presentation;
+
+import controller.AnimalController;
+import models.Tier;
+
+import java.util.List;
+import java.util.Scanner;
+
+public class ClientMenu {
+    private AnimalController animalController;
+    private Scanner scanner;
+
+    public ClientMenu(AnimalController animalController) {
+        this.animalController = animalController;
+        this.scanner = new Scanner(System.in);
+    }
+
+    public void showMenu() {
+        while (true) {
+            System.out.println("\n Client Menu:");
+            System.out.println("1. Show all available animals for adoption");
+            System.out.println("2. Adopt an animal");
+            System.out.println("0. Back to main menu");
+
+            int choice = scanner.nextInt();
+
+            if (choice == 1) {
+                // Obține lista tuturor animalelor
+                List<Tier> animals = animalController.viewAllAnimals();
+
+                // Filtrează animalele neadoptate (status diferit de "adoptat")
+                System.out.println("Available animals for adoption:");
+                for (Tier animal : animals) {
+                    if (!"adopted".equalsIgnoreCase(animal.getStatus())) {
+                        System.out.println(animal);
+                    }
+                }
+            } else if (choice == 2) {
+                System.out.println("ID of the animal you want to adopt: ");
+                int animalId = scanner.nextInt();
+                animalController.adoptAnimal(animalId);
+            } else if (choice == 0) {
+                break;
+            } else {
+                System.out.println("Invalid choice.");
+            }
+        }
+    }
+}
