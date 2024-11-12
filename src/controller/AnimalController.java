@@ -38,11 +38,11 @@ public class AnimalController {
         Tier animal = animalService.getAnimalById(animalId);
         if (animal != null) {
             // logic of adoption - changing the status of an animal to "adopted"
-            animal.setStatus("adoptat");
-            updateAnimalStatus(animalId, "adoptat");
-            System.out.println("Animalul a fost adoptat!");
+            animal.setStatus("adopted");
+            updateAnimalStatus(animalId, "adopted");
+            System.out.println("Animal adopted successfully!");
         } else {
-            System.out.println("Animalul nu a fost găsit.");
+            System.out.println("Animal not found!.");
         }
     }
 }
