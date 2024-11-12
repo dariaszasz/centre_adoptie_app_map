@@ -11,7 +11,7 @@ public class Tierart {
         this.besondereEigenschaften = besondereEigenschaften;
     }
 
-    // Getter und Setter
+    // Getter and Setter
     public int getId() {
         return id;
     }
