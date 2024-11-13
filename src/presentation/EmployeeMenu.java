@@ -34,7 +34,7 @@ public class EmployeeMenu {
 
             if (choice == 1) {
                 List<Tier> animals = animalController.viewAllAnimals();
-                System.out.println("All animals: :");
+                System.out.println("All animals: ");
                 for (Tier animal : animals) {
                     System.out.println(animal);
                 }
@@ -46,6 +46,7 @@ public class EmployeeMenu {
                 scanner.nextLine();
                 System.out.print("Name: ");
                 String name = scanner.nextLine();
+
                 System.out.print("Tierart ID: ");
                 int tierId = scanner.nextInt();
                 scanner.nextLine();
@@ -53,54 +54,80 @@ public class EmployeeMenu {
                 String tierName = scanner.nextLine();
                 System.out.print("Tierart Description: ");
                 String tierDescription = scanner.nextLine();
+
                 System.out.print("Age: ");
                 int age = scanner.nextInt();
-                scanner.nextLine(); // Consume newline
+                scanner.nextLine();
                 System.out.print("Status: ");
                 String status = scanner.nextLine();
 
                 Tierart tierart = new Tierart(tierId, tierName, tierDescription);
 
                 List<String> healthHistory = new ArrayList<>();
-                healthHistory.add("Example health records");
+                System.out.println("Enter health history records (type 'done' to finish): ");
+                while (true) {
+                    String record = scanner.nextLine();
+                    if (record.equalsIgnoreCase("done")) {
+                        break;
+                    }
+                    healthHistory.add(record);
+                }
 
                 List<String> medications = new ArrayList<>();
-                medications.add("Example medications");
+                System.out.println("Enter medications (type 'done' to finish): ");
+                while (true) {
+                    String medication = scanner.nextLine();
+                    if (medication.equalsIgnoreCase("done")) {
+                        break;  // Ieșim din buclă dacă se scrie "done"
+                    }
+                    medications.add(medication);
+                }
+
+                System.out.print("Enter vet's name: ");
+                String vetName = scanner.nextLine();
+                System.out.print("Enter vet's specialization: ");
+                String vetSpecialization = scanner.nextLine();
+                System.out.print("Enter vet's email: ");
+                String vetEmail = scanner.nextLine();
 
                 List<Tierheim> shelterList = new ArrayList<>();
-                Tierarzt vet = new Tierarzt(1, "Dr. John Doe", "johndoe@yahoo.com", "Surgery", shelterList);
+                Tierarzt vet = new Tierarzt(1, vetName, vetEmail, vetSpecialization, shelterList);
 
                 Gesundheitsakte healthRecord = new Gesundheitsakte(1, healthHistory, medications, vet);
 
-                int idPflegeprogramm = 1;
-                String description = "General Pflegeprogramm";
-                String carePlan = "Daily care and regular doctor visits";
-                Pflegeprogramm careProgram = new Pflegeprogramm(idPflegeprogramm, description, carePlan);
+                System.out.print("Enter Pflegeprogramm description: ");
+                String careDescription = scanner.nextLine();
+                System.out.print("Enter care plan details: ");
+                String carePlan = scanner.nextLine();
+
+                Pflegeprogramm careProgram = new Pflegeprogramm(1, careDescription, carePlan);
 
                 Tier animal = new Tier(id, name, tierart, age, healthRecord, careProgram, status);
+
                 animalController.addAnimal(animal);
                 System.out.println("Animal added successfully!");
 
                 List<Tier> animals = animalController.viewAllAnimals();
-                System.out.println("All animals: :");
+                System.out.println("All animals: ");
                 for (Tier animalItem : animals) {
                     System.out.println(animalItem);
                 }
+
             } else if (choice == 3) {
-                System.out.println("Enter the ID of the animal you want to delete: :");
+                System.out.println("Enter the ID of the animal you want to delete: ");
                 int animalId = scanner.nextInt();
                 animalController.removeAnimal(animalId);
-                System.out.println("Animal removed successfully!.");
+                System.out.println("Animal removed successfully!");
             } else if (choice == 4) {
-                System.out.println("Enter the Id and the new status of the animal: :");
+                System.out.println("Enter the Id and the new status of the animal: ");
                 int animalId = scanner.nextInt();
                 String status = scanner.next();
                 animalController.updateAnimalStatus(animalId, status);
-                System.out.println("Status updated successfully!.");
+                System.out.println("Status updated successfully!");
             } else if (choice == 0) {
-                break;  // Ieși din meniu și revino la meniul principal
+                break;
             } else {
-                System.out.println("Invalid choice!.");
+                System.out.println("Invalid choice!");
             }
         }
     }
