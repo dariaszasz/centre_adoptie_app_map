@@ -35,4 +35,10 @@ public class Tierart {
     public void setBesondereEigenschaften(String besondereEigenschaften) {
         this.besondereEigenschaften = besondereEigenschaften;
     }
+
+    @Override
+    public String toString() {
+        return "ID: " + id + ", Name: " + artName + ", Description: " + besondereEigenschaften;
+    }
+
 }

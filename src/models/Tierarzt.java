@@ -27,4 +27,11 @@ public class Tierarzt extends Person {
     public void setTierheime(List<Tierheim> tierheime) {
         this.tierheime = tierheime;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                ", Specialization: " + spezialisierung +
+                ", Assigned Shelters: " + tierheime;
+    }
 }

@@ -80,11 +80,24 @@ public class Tier implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
-
+/*
     @Override
     public String toString() {
         return "ID: " + id + ", Nume: " + name + ", Tierart: " + tierart.getArtName() +
                 ", Vârsta: " + alter + ", Status: " + status;
     }
+
+ */
+@Override
+public String toString() {
+    return "ID: " + id +
+            ", Name: " + name +
+            ", Tierart: " + tierart +
+            ", Age: " + alter +
+            ", Status: " + status +
+            ", Health Record: " + (gesundheitsakte != null ? gesundheitsakte.toString() : "No record") +
+            ", Care Program: " + (pflegeprogramm != null ? pflegeprogramm.toString() : "No program");
+}
+
 
 }
