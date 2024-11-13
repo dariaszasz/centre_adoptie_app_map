@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class ClientMenu {
     private AnimalController animalController;
+    // Obiect pt a citi input-ul de la utilizator
     private Scanner scanner;
 
     public ClientMenu(AnimalController animalController) {
