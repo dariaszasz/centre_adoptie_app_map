@@ -35,4 +35,9 @@ public abstract class Person {
     public void setKontaktDetails(String kontaktDetails) {
         this.kontaktDetails = kontaktDetails;
     }
+
+    @Override
+    public String toString() {
+        return "Name: " + name + ", Email: " + kontaktDetails;
+    }
 }
