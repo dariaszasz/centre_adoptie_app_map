@@ -35,4 +35,11 @@ public class Pflegeprogramm {
     public void setMedizinischeVersorgung(String medizinischeVersorgung) {
         this.medizinischeVersorgung = medizinischeVersorgung;
     }
+
+    @Override
+    public String toString() {
+        return "Program ID: " + id +
+                ", Description: " + futterplan +
+                ", Care Plan: " + medizinischeVersorgung;
+    }
 }
