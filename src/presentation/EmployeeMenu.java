@@ -41,12 +41,19 @@ public class EmployeeMenu {
             } else if (choice == 2) {
                 System.out.println("Enter the details of the animal you want to add: ");
 
+                // Citirea informatiilor pt noul animal
                 System.out.print("ID: ");
                 int id = scanner.nextInt();
                 scanner.nextLine();
                 System.out.print("Name: ");
                 String name = scanner.nextLine();
+                System.out.print("Age: ");
+                int age = scanner.nextInt();
+                scanner.nextLine();
+                System.out.print("Status: ");
+                String status = scanner.nextLine();
 
+                // Citirea detaliilor pt obiectul Tierart
                 System.out.print("Tierart ID: ");
                 int tierId = scanner.nextInt();
                 scanner.nextLine();
@@ -55,24 +62,22 @@ public class EmployeeMenu {
                 System.out.print("Tierart Description: ");
                 String tierDescription = scanner.nextLine();
 
-                System.out.print("Age: ");
-                int age = scanner.nextInt();
-                scanner.nextLine();
-                System.out.print("Status: ");
-                String status = scanner.nextLine();
-
+                // Crearea obiectului Tierart cu datele introduse
                 Tierart tierart = new Tierart(tierId, tierName, tierDescription);
 
+                // Citirea istoricului medical
                 List<String> healthHistory = new ArrayList<>();
                 System.out.println("Enter health history records (type 'done' to finish): ");
                 while (true) {
                     String record = scanner.nextLine();
+                    // Incheie citirea daca utilizatorul scrie "done"
                     if (record.equalsIgnoreCase("done")) {
                         break;
                     }
-                    healthHistory.add(record);
+                    healthHistory.add(record);// Adauga inregistrarea in lista de istoric medical
                 }
 
+                // Citirea medicamentelor
                 List<String> medications = new ArrayList<>();
                 System.out.println("Enter medications (type 'done' to finish): ");
                 while (true) {
@@ -83,6 +88,7 @@ public class EmployeeMenu {
                     medications.add(medication);
                 }
 
+                // Citirea informatiilor despre veterinar
                 System.out.print("Enter vet's name: ");
                 String vetName = scanner.nextLine();
                 System.out.print("Enter vet's specialization: ");
@@ -90,11 +96,14 @@ public class EmployeeMenu {
                 System.out.print("Enter vet's email: ");
                 String vetEmail = scanner.nextLine();
 
+                // Crearea listei de adaposturi pt veterinar
                 List<Tierheim> shelterList = new ArrayList<>();
                 Tierarzt vet = new Tierarzt(1, vetName, vetEmail, vetSpecialization, shelterList);
 
+                // Crearea istoricului medical al animalului folosind lista de istorii si lista de medicamente
                 Gesundheitsakte healthRecord = new Gesundheitsakte(1, healthHistory, medications, vet);
 
+                // Citirea si crearea programului de ingrijire
                 System.out.print("Enter Pflegeprogramm description: ");
                 String careDescription = scanner.nextLine();
                 System.out.print("Enter care plan details: ");
@@ -102,11 +111,14 @@ public class EmployeeMenu {
 
                 Pflegeprogramm careProgram = new Pflegeprogramm(1, careDescription, carePlan);
 
+                // Crearea obiectului animalului cu toate detaliile introduse de utilizator
                 Tier animal = new Tier(id, name, tierart, age, healthRecord, careProgram, status);
 
+                // Adaugarea animalului in sistem
                 animalController.addAnimal(animal);
                 System.out.println("Animal added successfully!");
 
+                // Afisarea listei actualizate de animale
                 List<Tier> animals = animalController.viewAllAnimals();
                 System.out.println("All animals: ");
                 for (Tier animalItem : animals) {
