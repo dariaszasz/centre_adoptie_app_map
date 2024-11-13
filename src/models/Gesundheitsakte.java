@@ -47,4 +47,11 @@ public class Gesundheitsakte {
     public void setTierarzt(Tierarzt tierarzt) {
         this.tierarzt = tierarzt;
     }
+
+    @Override
+    public String toString() {
+        return "Health History: " + diagnosen +
+                ", Medications: " + behandlungen +
+                ", Vet: " + (tierarzt != null ? tierarzt.toString() : "No vet assigned");
+    }
 }
