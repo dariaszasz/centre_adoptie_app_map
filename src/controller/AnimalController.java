@@ -1,10 +1,10 @@
 package controller;
 
-import models.Tier;
-import models.Tierart;
+import models.Animal;
 import service.AnimalService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AnimalController {
     private AnimalService animalService;
@@ -13,36 +13,42 @@ public class AnimalController {
         this.animalService = animalService;
     }
 
-    // function to see the available animals
-    public List<Tier> viewAllAnimals() {
+    // Endpoint to add a new animal
+    public String addAnimal(Animal animal) {
+        animalService.addAnimal(animal);  // Adăugăm animalul în serviciu
+        return "Animal added successfully!";
+    }
+
+    // Endpoint to get all animals
+    public List<Animal> getAllAnimals() {
         return animalService.getAllAnimals();
     }
 
-    //function to add an animal 
-    public void addAnimal(Tier animal) {
-        animalService.addAnimal(animal);
+    // Endpoint to get an animal by ID
+    public Animal getAnimalById(int id) {
+        return animalService.getAnimalById(id);
     }
 
-    // function to delete an animal
-    public void removeAnimal(int id) {
-        animalService.removeAnimal(id);
+    // Endpoint to update an animal
+    public String updateAnimal(Animal animal) {
+        animalService.updateAnimal(animal);
+        return "Animal updated successfully!";
     }
 
-    //function to change the status
-    public void updateAnimalStatus(int id, String status) {
-        animalService.updateAnimalStatus(id, status);
+    // Endpoint to delete an animal
+    public String deleteAnimal(int id) {
+        animalService.deleteAnimal(id);
+        return "Animal deleted successfully!";
     }
 
-    // function to adopt
-    public void adoptAnimal(int animalId) {
-        Tier animal = animalService.getAnimalById(animalId);
-        if (animal != null) {
-            // logic of adoption - changing the status of an animal to "adopted"
-            animal.setStatus("adopted");
-            updateAnimalStatus(animalId, "adopted");
-            System.out.println("Animal adopted successfully!");
-        } else {
-            System.out.println("Animal not found!.");
-        }
+    // Endpoint to sort animals by age
+    public List<Animal> sortAnimalsByAge() {
+        return animalService.sortAnimalsByAge();
     }
+
+    // Endpoint to filter animals by status
+    public List<Animal> filterAnimalsByStatus(String status) {
+        return animalService.filterAnimalsByStatus(status);
+    }
+
 }
