@@ -1,43 +1,44 @@
 package models;
 
-public abstract class Person {
+import java.io.Serializable;
+
+public abstract class Person extends BaseEntity implements Serializable {
     private int id;
     private String name;
-    private String kontaktDetails;
+    private String contactDetails;
 
-    public Person(int id, String name, String kontaktDetails) {
-        this.id = id;
+    public Person(int id, String name, String contactDetails) {
+        super(id); // Setează ID-ul din clasa de bază
         this.name = name;
-        this.kontaktDetails = kontaktDetails;
+        this.contactDetails = contactDetails;
     }
 
-    // Getter and Setter
     public int getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getKontaktDetails() {
-        return kontaktDetails;
     }
 
     public void setId(int id) {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setKontaktDetails(String kontaktDetails) {
-        this.kontaktDetails = kontaktDetails;
+    public String getContactDetails() {
+        return contactDetails;
+    }
+
+    public void setContactDetails(String contactDetails) {
+        this.contactDetails = contactDetails;
     }
 
     @Override
     public String toString() {
-        return "Name: " + name + ", Email: " + kontaktDetails;
+        return "ID: " + id + ", Name: " + name + ", Contact: " + contactDetails;
     }
 }
