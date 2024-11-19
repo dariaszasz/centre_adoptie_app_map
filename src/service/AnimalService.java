@@ -1,48 +1,55 @@
 package service;
 
-import models.Tier;
-import repository.IAnimalRepository;
+import models.Animal;
+import repository.IRepository;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class AnimalService {
-    // Declaratia unui obiect de tip IAnimalRepository pt a interactiona cu datele despre animale
-    private IAnimalRepository animalRepository;
+    private IRepository<Animal> animalRepository;
 
-    // Constructorul clasei AnimalService care primeste un obiect de tip IAnimalRepository
-    // si il foloseste pt a efectua operatii asupra animalelor
-    public AnimalService(IAnimalRepository animalRepository) {
+    public AnimalService(IRepository<Animal> animalRepository) {
         this.animalRepository = animalRepository;
     }
 
-    // Metoda pt a obtine toate animalele din repository (de exemplu o lista de animale)
-    public List<Tier> getAllAnimals() {
-        // Apeleaza metoda getAllAnimals din repository pt a returna lista de animale
-        return animalRepository.getAllAnimals();
+    // Method to add an animal
+    public void addAnimal(Animal animal) {
+        animalRepository.add(animal);
     }
 
-    // Metoda pentru a adauga un animal in repository
-    public void addAnimal(Tier animal) {
-        // Apeleaza metoda addAnimal din repository pt a adauga animalul la lista din repository
-        animalRepository.addAnimal(animal);
+    // Method to get all animals
+    public List<Animal> getAllAnimals() {
+        return animalRepository.getAll();
     }
 
-    // Metoda pt a sterge un animal din repository pe baza ID-ului
-    public void removeAnimal(int id) {
-        animalRepository.removeAnimal(id);
+    // Method to get animal by ID
+    public Animal getAnimalById(int id) {
+        return animalRepository.getById(id);
     }
 
-    // Metoda pt a actualiza statusul unui animal pe baza ID-ului
-    public void updateAnimalStatus(int id, String status) {
-        animalRepository.updateAnimalStatus(id, status);
+    // Method to update an animal
+    public void updateAnimal(Animal animal) {
+        animalRepository.update(animal);
     }
 
-    // Metoda pt a obtine un animal dupa ID
-    public Tier getAnimalById(int id) {
-        Optional<Tier> animal = animalRepository.findById(id);
-        // Daca animalul exista il returneaza
-        // Daca nu exista (Optional este gol) returneaza null
-        return animal.orElse(null);
+    // Method to delete an animal
+    public void deleteAnimal(int id) {
+        animalRepository.delete(id);
+    }
+
+    // Sorting animals by their age in ascending order
+    public List<Animal> sortAnimalsByAge() {
+        return animalRepository.getAll().stream()
+                .sorted((a1, a2) -> Integer.compare(a1.getAge(), a2.getAge()))
+                .collect(Collectors.toList());
+    }
+
+    // Filtering animals by their availability status
+    public List<Animal> filterAnimalsByStatus(String status) {
+        return animalRepository.getAll().stream()
+                .filter(animal -> animal.getStatus().equalsIgnoreCase(status))
+                .collect(Collectors.toList());
     }
 }
+
