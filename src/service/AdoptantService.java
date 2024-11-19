@@ -5,8 +5,7 @@ import models.AdoptionRequest;
 import models.Animal;
 import repository.IRepository;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AdoptantService {
@@ -102,5 +101,24 @@ public class AdoptantService {
         return adoptantRepository.generateUniqueId(); // adoptantRepository este instanța FileRepository
     }
 
+    public List<Adoptant> getAdoptantsByTotalAdoptions() {
+        // Map pentru a stoca numărul de cereri pentru fiecare adoptant
+        Map<Adoptant, Integer> adoptantAdoptionCount = new HashMap<>();
+
+        // Parcurge toate cererile de adopție și numără câte cereri are fiecare adoptant
+        for (AdoptionRequest request : adoptionRequestRepository.getAll()) {
+            Adoptant adoptant = request.getAdoptant();
+            adoptantAdoptionCount.put(adoptant, adoptantAdoptionCount.getOrDefault(adoptant, 0) + 1);
+        }
+
+        // Crează o listă de adoptanți sortată descrescător după numărul cererilor
+        List<Adoptant> sortedAdoptants = new ArrayList<>(adoptantAdoptionCount.keySet());
+        sortedAdoptants.sort((adoptant1, adoptant2) -> Integer.compare(
+                adoptantAdoptionCount.get(adoptant2), // Adopții mai multe vin mai întâi
+                adoptantAdoptionCount.get(adoptant1)
+        ));
+
+        return sortedAdoptants;
+    }
 
 }

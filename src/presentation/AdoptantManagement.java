@@ -28,8 +28,8 @@ public class AdoptantManagement {
             System.out.println("5. Delete Adoptant");
             System.out.println("6. View Adoption Requests for Adoptant");
             System.out.println("7. Make Adoption Request");
-            System.out.println("8. View Adoptants with Adoption Requests");
-            System.out.println("9. Sort Adoptants by Adoption Requests");
+            System.out.println("8. View Adoptants with a minimum of Adoption Requests:");
+            System.out.println("9. View Adoptants Sorted by Total Adoptions");
             System.out.println("10. Exit");
 
             System.out.print("Choose an option: ");
@@ -62,7 +62,7 @@ public class AdoptantManagement {
                     viewAdoptantsWithAdoptionRequests();
                     break;
                 case 9:
-                    sortAdoptantsByAdoptionRequests();
+                    viewAdoptantsSortedByTotalAdoptions();
                     break;
                 case 10:
                     System.out.println("Exiting...");
@@ -78,7 +78,6 @@ public class AdoptantManagement {
         adoptantController.addAdoptant();
     }
 
-
     // View all adoptants
     private void viewAllAdoptants() {
         List<Adoptant> adoptants = adoptantController.getAllAdoptants();
@@ -88,7 +87,6 @@ public class AdoptantManagement {
             adoptants.forEach(adoptant -> System.out.println(adoptant));
         }
     }
-
 
     // View adoptant by ID
     private void viewAdoptantById() {
@@ -171,8 +169,8 @@ public class AdoptantManagement {
         adoptantController.viewAdoptantsWithAdoptionRequests(minRequests);
     }
 
-    // Sort adoptants by the number of adoption requests
-    private void sortAdoptantsByAdoptionRequests() {
-        adoptantController.sortAdoptantsByAdoptionRequests();
+    // View adoptants sorted by the total number of adoptions
+    private void viewAdoptantsSortedByTotalAdoptions() {
+        adoptantController.viewAdoptantsSortedByTotalAdoptions();
     }
 }

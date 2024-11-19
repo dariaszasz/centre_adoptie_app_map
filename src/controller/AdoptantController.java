@@ -39,7 +39,6 @@ public class AdoptantController {
         System.out.println("Adoptant added successfully!");
     }
 
-
     // Metodă pentru a vizualiza toți adoptanții
     public void viewAllAdoptants() {
         List<Adoptant> adoptants = adoptantService.getAllAdoptants();
@@ -162,6 +161,17 @@ public class AdoptantController {
         }
     }
 
+    // Metodă pentru a vizualiza adoptanții sortați după numărul total de cereri de adopție
+    public void viewAdoptantsSortedByTotalAdoptions() {
+        List<Adoptant> sortedAdoptants = adoptantService.getAdoptantsByTotalAdoptions();
+        if (sortedAdoptants.isEmpty()) {
+            System.out.println("No adoptants found.");
+        } else {
+            sortedAdoptants.forEach(adoptant -> System.out.println(adoptant + " - Total Adoptions: " +
+                    adoptantService.getAdoptionRequestsByAdoptant(adoptant).size()));
+        }
+    }
+
     public List<Adoptant> getAllAdoptants() {
         return adoptantService.getAllAdoptants();
     }
@@ -197,7 +207,6 @@ public class AdoptantController {
         }
     }
 
-
     // Metoda pentru a crea o cerere de adopție
     public void makeAdoptionRequest(int adoptantId, int animalId) {
         Adoptant adoptant = adoptantService.getAdoptantById(adoptantId);
@@ -222,7 +231,7 @@ public class AdoptantController {
     }
 
     public void addAdoptionRequest(AdoptionRequest adoptionRequest) {
-        adoptantService.addAdoptionRequest(adoptionRequest);  // Apelează metoda din serviciu
+        adoptantService.addAdoptionRequest(adoptionRequest);
         System.out.println("Adoption request added successfully.");
     }
 }
