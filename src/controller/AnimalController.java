@@ -4,7 +4,6 @@ import models.Animal;
 import service.AnimalService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class AnimalController {
     private AnimalService animalService;
