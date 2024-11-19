@@ -75,16 +75,7 @@ public class AdoptantManagement {
 
     // Add a new adoptant
     private void addAdoptant() {
-        System.out.print("Enter adoptant name: ");
-        String name = scanner.nextLine();
-
-        System.out.print("Enter adoptant contact details: ");
-        String contactDetails = scanner.nextLine();
-
-        // Create a new Adoptant object
-        Adoptant adoptant = new Adoptant(0, name, contactDetails);
-        adoptantController.addAdoptant(adoptant);
-        System.out.println("Adoptant added successfully!");
+        adoptantController.addAdoptant();
     }
 
 

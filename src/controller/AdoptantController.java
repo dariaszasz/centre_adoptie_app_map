@@ -23,9 +23,22 @@ public class AdoptantController {
     }
 
     // Metodă pentru a adăuga un adoptant
-    public void addAdoptant(Adoptant adoptant) {
-        adoptantService.addAdoptant(adoptant);
+    public void addAdoptant() {
+        System.out.print("Enter adoptant name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter adoptant contact details: ");
+        String contactDetails = scanner.nextLine();
+
+        Adoptant newAdoptant = new Adoptant(
+                adoptantService.generateUniqueId(), // Generează ID-ul
+                name,
+                contactDetails
+        );
+
+        adoptantService.addAdoptant(newAdoptant); // Adaugă adoptantul
+        System.out.println("Adoptant added successfully!");
     }
+
 
     // Metodă pentru a vizualiza toți adoptanții
     public void viewAllAdoptants() {

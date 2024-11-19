@@ -19,10 +19,14 @@ public class AdoptantService {
         this.adoptionRequestRepository = adoptionRequestRepository;
     }
 
-    // Metodă pentru a adăuga un adoptant
     public void addAdoptant(Adoptant adoptant) {
+        // Atribuirea unui ID unic
+        adoptant.setId(adoptantRepository.generateUniqueId());
+
+        // Adăugarea adoptantului
         adoptantRepository.add(adoptant);
     }
+
 
     // Metodă pentru a obține toți adoptanții
     public List<Adoptant> getAllAdoptants() {
@@ -93,5 +97,10 @@ public class AdoptantService {
     public void addAdoptionRequest(AdoptionRequest adoptionRequest) {
         adoptionRequestRepository.add(adoptionRequest);
     }
+
+    public int generateUniqueId() {
+        return adoptantRepository.generateUniqueId(); // adoptantRepository este instanța FileRepository
+    }
+
 
 }

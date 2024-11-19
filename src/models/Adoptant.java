@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Adoptant extends Person {
+    private static int currentId = 1;
     private List<AdoptionRequest> adoptionRequests;
 
     public Adoptant(int id, String name, String contactDetails) {
-        super(id, name, contactDetails);
+        super(currentId++, name, contactDetails);
         this.adoptionRequests = new ArrayList<>();
     }
 
