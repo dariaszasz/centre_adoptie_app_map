@@ -49,12 +49,4 @@ public class VolunteerController {
     public List<Volunteer> filterVolunteersBySheltersCount(int minShelters) {
         return volunteerService.filterVolunteersBySheltersCount(minShelters);
     }
-
-    public String assignAnimalToVolunteer(int volunteerId, int animalId) {
-        return volunteerService.assignAnimalToVolunteer(volunteerId, animalId);
-    }
-
-    public int generateUniqueId() {
-        return volunteerService.generateUniqueId();
-    }
 }

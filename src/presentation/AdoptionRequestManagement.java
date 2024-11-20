@@ -7,17 +7,31 @@ import models.AdoptionRequest;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * This class handles the presentation logic for managing adoption requests.
+ * It provides a menu-driven interface to view, approve, or reject adoption requests,
+ * as well as view adoptants with the most adoption requests.
+ */
 public class AdoptionRequestManagement {
 
     private AdoptionRequestController adoptionRequestController;
     private Scanner scanner;
 
+    /**
+     * Constructor that initializes the AdoptionRequestController and Scanner.
+     *
+     * @param adoptionRequestController the controller used to manage adoption requests
+     */
     public AdoptionRequestManagement(AdoptionRequestController adoptionRequestController) {
         this.adoptionRequestController = adoptionRequestController;
         this.scanner = new Scanner(System.in);
     }
 
-    // Display menu to the user
+    /**
+     * Displays a menu to the user and handles user input for performing actions on adoption requests.
+     * The user can choose to view, approve, or reject adoption requests,
+     * and view adoptants with the most requests.
+     */
     public void displayMenu() {
         while (true) {
             System.out.println("\n--- Adoption Request Management ---");
@@ -53,7 +67,10 @@ public class AdoptionRequestManagement {
         }
     }
 
-    // View all adoption requests
+    /**
+     * Displays all adoption requests by fetching them from the AdoptionRequestController.
+     * If no adoption requests are found, a message is displayed to the user.
+     */
     private void viewAllAdoptionRequests() {
         List<AdoptionRequest> requests = adoptionRequestController.getAllAdoptionRequests();
         if (requests.isEmpty()) {
@@ -66,7 +83,10 @@ public class AdoptionRequestManagement {
         }
     }
 
-    // Approve an adoption request
+    /**
+     * Approves an adoption request based on the request ID provided by the user.
+     * The adoption request is processed by the AdoptionRequestController.
+     */
     private void approveAdoptionRequest() {
         System.out.print("Enter adoption request ID to approve: ");
         int requestId = scanner.nextInt();
@@ -74,7 +94,10 @@ public class AdoptionRequestManagement {
         System.out.println("Adoption request approved successfully.");
     }
 
-    // Reject an adoption request
+    /**
+     * Rejects an adoption request based on the request ID provided by the user.
+     * The adoption request is processed by the AdoptionRequestController.
+     */
     private void rejectAdoptionRequest() {
         System.out.print("Enter adoption request ID to reject: ");
         int requestId = scanner.nextInt();
@@ -82,7 +105,10 @@ public class AdoptionRequestManagement {
         System.out.println("Adoption request rejected successfully.");
     }
 
-    // View adoptants with the most adoption requests
+    /**
+     * Displays adoptants who have the most adoption requests.
+     * The total number of requests for each adoptant is calculated and displayed.
+     */
     private void viewAdoptantsByTotalRequests() {
         List<Adoptant> adoptants = adoptionRequestController.getAdoptantsByTotalRequests();
         if (adoptants.isEmpty()) {

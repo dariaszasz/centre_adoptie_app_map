@@ -1,6 +1,6 @@
 /**
  * Controller class for managing adoption requests.
- * Provides operations for adding, retrieving, approving, rejecting,
+ * Provides operations for adding, retrieving, approving, rejecting, 
  * and analyzing adoption requests.
  */
 package controller;

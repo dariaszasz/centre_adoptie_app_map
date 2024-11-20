@@ -7,16 +7,29 @@ import models.AnimalType;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * This class handles the presentation logic for managing animals in the system.
+ * It provides a menu-driven interface to add, view, update, delete, and sort animals.
+ */
 public class AnimalManagement {
+
     private AnimalController animalController;
     private Scanner scanner;
 
+    /**
+     * Constructor that initializes the AnimalController and Scanner.
+     *
+     * @param animalController the controller used to manage animals
+     */
     public AnimalManagement(AnimalController animalController) {
         this.animalController = animalController;
         this.scanner = new Scanner(System.in);
     }
 
-    // Display menu to the user
+    /**
+     * Displays a menu to the user and handles user input for performing actions on animals.
+     * The user can choose to add, view, update, delete, sort, or filter animals.
+     */
     public void displayMenu() {
         while (true) {
             System.out.println("\n--- Animal Management ---");
@@ -64,10 +77,14 @@ public class AnimalManagement {
         }
     }
 
-    // Add a new animal
+    /**
+     * Adds a new animal by taking input from the user.
+     * The animal's details, such as ID, name, age, type, and status, are collected,
+     * and a new Animal object is created and added to the repository.
+     */
     private void addAnimal() {
         System.out.print("Enter animal ID: ");
-        int id = scanner.nextInt();  // Utilizatorul introduce ID-ul animalului
+        int id = scanner.nextInt();  // User inputs the animal's ID
         scanner.nextLine();  // Consume newline
 
         System.out.print("Enter animal name: ");
@@ -86,17 +103,19 @@ public class AnimalManagement {
         System.out.print("Enter animal status (e.g., Available, Adopted): ");
         String status = scanner.nextLine();
 
-        // Creăm un obiect de tip Animal cu ID-ul personalizat
-        AnimalType animalType = new AnimalType(0, typeName, specialCharacteristics);  // Presupunem că ID-ul animalului este 0 pentru AnimalType
+        // Create an Animal object with a customized ID
+        AnimalType animalType = new AnimalType(0, typeName, specialCharacteristics);  // Assuming ID 0 for AnimalType
         Animal animal = new Animal(id, name, animalType, age, status);
 
-        // Adăugăm animalul în repository
+        // Add the animal to the repository
         String result = animalController.addAnimal(animal);
         System.out.println(result);
     }
 
-
-    // View all animals
+    /**
+     * Displays all animals by fetching them from the AnimalController.
+     * If no animals are available, a message is displayed to the user.
+     */
     private void viewAllAnimals() {
         List<Animal> animals = animalController.getAllAnimals();
         if (animals.isEmpty()) {
@@ -106,7 +125,10 @@ public class AnimalManagement {
         }
     }
 
-    // View animal by ID
+    /**
+     * Displays a specific animal by its ID.
+     * If the animal is found, its details are printed, otherwise, a "not found" message is displayed.
+     */
     private void viewAnimalById() {
         System.out.print("Enter animal ID: ");
         int id = scanner.nextInt();
@@ -119,7 +141,10 @@ public class AnimalManagement {
         }
     }
 
-    // Update animal details
+    /**
+     * Updates the details of an animal based on the ID provided by the user.
+     * The user can update the name, age, type, and status of the animal.
+     */
     private void updateAnimal() {
         System.out.print("Enter animal ID to update: ");
         int id = scanner.nextInt();
@@ -161,7 +186,10 @@ public class AnimalManagement {
         }
     }
 
-    // Delete an animal
+    /**
+     * Deletes an animal based on the ID provided by the user.
+     * The animal is removed from the repository, and a success message is displayed.
+     */
     private void deleteAnimal() {
         System.out.print("Enter animal ID to delete: ");
         int id = scanner.nextInt();
@@ -174,9 +202,10 @@ public class AnimalManagement {
         System.out.println(resultMessage);
     }
 
-
-
-    // Sort animals by age
+    /**
+     * Sorts all animals by their age in ascending order and displays the sorted list.
+     * If no animals are available, a message is displayed.
+     */
     private void sortAnimalsByAge() {
         List<Animal> sortedAnimals = animalController.sortAnimalsByAge();
         if (sortedAnimals.isEmpty()) {
@@ -186,7 +215,10 @@ public class AnimalManagement {
         }
     }
 
-    // Filter animals by status
+    /**
+     * Filters animals by their status (e.g., Available, Adopted) and displays the filtered list.
+     * If no animals match the status, a message is displayed.
+     */
     private void filterAnimalsByStatus() {
         System.out.print("Enter status to filter by (e.g., Available, Adopted): ");
         String status = scanner.nextLine();

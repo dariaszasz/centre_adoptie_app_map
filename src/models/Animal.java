@@ -8,7 +8,6 @@ public class Animal extends BaseEntity implements Serializable {
     private int age;
     private HealthRecord healthRecord;
     private CarePlan carePlan;
-    private Volunteer assignedVolunteer;
     private String status;
 
     public Animal(int id, String name, AnimalType animalType, int age, String status) {
@@ -16,7 +15,6 @@ public class Animal extends BaseEntity implements Serializable {
         this.name = name;
         this.animalType = animalType;
         this.age = age;
-        this.assignedVolunteer = null;
         this.status = status;
     }
 
@@ -71,13 +69,5 @@ public class Animal extends BaseEntity implements Serializable {
     @Override
     public String toString() {
         return "Animal ID: " + getId() + ", Name: " + name + ", Type: " + animalType.getTypeName() + ", Age: " + age + ", Status: " + status;
-    }
-
-    public Volunteer getAssignedVolunteer() {
-        return assignedVolunteer;
-    }
-
-    public void setAssignedVolunteer(Volunteer assignedVolunteer) {
-        this.assignedVolunteer = assignedVolunteer;
     }
 }
