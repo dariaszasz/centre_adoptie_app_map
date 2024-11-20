@@ -9,28 +9,52 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Service class responsible for handling operations related to adoption requests.
+ * It interacts with repositories to add, approve, reject, and retrieve adoption requests.
+ */
 public class AdoptionRequestService {
     private IRepository<AdoptionRequest> adoptionRequestRepository;
     private IRepository<Animal> animalRepository;
     private IRepository<Adoptant> adoptantRepository;
 
+    /**
+     * Constructor for the AdoptionRequestService.
+     *
+     * @param adoptionRequestRepository The repository for adoption requests.
+     * @param animalRepository The repository for animals.
+     * @param adoptantRepository The repository for adoptants.
+     */
     public AdoptionRequestService(IRepository<AdoptionRequest> adoptionRequestRepository, IRepository<Animal> animalRepository, IRepository<Adoptant> adoptantRepository) {
         this.adoptionRequestRepository = adoptionRequestRepository;
         this.animalRepository = animalRepository;
         this.adoptantRepository = adoptantRepository;
     }
 
-    // Method to add a new adoption request
+    /**
+     * Adds a new adoption request to the repository.
+     *
+     * @param request The adoption request to be added.
+     */
     public void addAdoptionRequest(AdoptionRequest request) {
         adoptionRequestRepository.add(request);
     }
 
-    // Get all adoption requests
+    /**
+     * Retrieves all adoption requests.
+     *
+     * @return A list of all adoption requests in the repository.
+     */
     public List<AdoptionRequest> getAllAdoptionRequests() {
         return adoptionRequestRepository.getAll();
     }
 
-    // Approve an adoption request
+    /**
+     * Approves an adoption request.
+     * Marks the adoption request as "Approved" and updates the animal's status to "Adopted".
+     *
+     * @param requestId The ID of the adoption request to approve.
+     */
     public void approveAdoptionRequest(int requestId) {
         AdoptionRequest request = adoptionRequestRepository.getById(requestId);
         if (request != null && request.getStatus().equals("Pending")) {
@@ -48,7 +72,12 @@ public class AdoptionRequestService {
         }
     }
 
-    // Reject an adoption request
+    /**
+     * Rejects an adoption request.
+     * Marks the adoption request as "Rejected".
+     *
+     * @param requestId The ID of the adoption request to reject.
+     */
     public void rejectAdoptionRequest(int requestId) {
         AdoptionRequest request = adoptionRequestRepository.getById(requestId);
         if (request != null && request.getStatus().equals("Pending")) {
@@ -60,19 +89,24 @@ public class AdoptionRequestService {
         }
     }
 
-    // Metoda pentru a obține adoptanții cu cele mai multe cereri de adopție
+    /**
+     * Retrieves a list of adoptants sorted by the total number of adoption requests they have made.
+     * The adoptants are sorted in descending order based on the number of requests.
+     *
+     * @return A list of adoptants sorted by the total number of adoption requests.
+     */
     public List<Adoptant> getAdoptantsByTotalRequests() {
-        // Obținem toate cererile de adopție
+        // Get all adoption requests
         List<AdoptionRequest> allRequests = adoptionRequestRepository.getAll();
 
-        // Creăm un map care leagă fiecare adoptant de numărul de cereri de adopție
+        // Create a map linking each adoptant to the number of adoption requests
         Map<Adoptant, Long> adoptantRequestCount = allRequests.stream()
                 .collect(Collectors.groupingBy(AdoptionRequest::getAdoptant, Collectors.counting()));
 
-        // Sortăm lista de adoptanți în funcție de numărul de cereri (descrescător)
+        // Sort the adoptants by the number of requests in descending order
         return adoptantRequestCount.entrySet().stream()
-                .sorted((entry1, entry2) -> Long.compare(entry2.getValue(), entry1.getValue())) // Sortare descrescătoare
-                .map(Map.Entry::getKey)  // Extragem doar adoptanții din map
+                .sorted((entry1, entry2) -> Long.compare(entry2.getValue(), entry1.getValue())) // Sort in descending order
+                .map(Map.Entry::getKey)  // Extract only the adoptants from the map
                 .collect(Collectors.toList());
     }
 }
