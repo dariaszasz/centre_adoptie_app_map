@@ -8,76 +8,122 @@ import repository.IRepository;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Service class that handles the business logic related to adoptants and adoption requests.
+ * Provides methods for adding, updating, deleting adoptants, managing adoption requests,
+ * and filtering and sorting adoptants based on adoption requests.
+ */
 public class AdoptantService {
     private IRepository<Adoptant> adoptantRepository;
-    private IRepository<AdoptionRequest> adoptionRequestRepository;  // Repository pentru cererile de adopție
+    private IRepository<AdoptionRequest> adoptionRequestRepository;  // Repository for adoption requests
 
-    // Constructor care primește repository-ul pentru Adoptant și AdoptionRequest
+    /**
+     * Constructor that initializes the AdoptantService with the provided repositories
+     * for adoptants and adoption requests.
+     *
+     * @param adoptantRepository The repository to handle adoptants data.
+     * @param adoptionRequestRepository The repository to handle adoption requests data.
+     */
     public AdoptantService(IRepository<Adoptant> adoptantRepository, IRepository<AdoptionRequest> adoptionRequestRepository) {
         this.adoptantRepository = adoptantRepository;
         this.adoptionRequestRepository = adoptionRequestRepository;
     }
 
+    /**
+     * Adds a new adoptant to the system.
+     * Assigns a unique ID to the adoptant before adding it to the repository.
+     *
+     * @param adoptant The adoptant object to be added.
+     */
     public void addAdoptant(Adoptant adoptant) {
-        // Atribuirea unui ID unic
         adoptant.setId(adoptantRepository.generateUniqueId());
-
-        // Adăugarea adoptantului
         adoptantRepository.add(adoptant);
     }
 
-
-    // Metodă pentru a obține toți adoptanții
+    /**
+     * Retrieves all adoptants in the system.
+     *
+     * @return A list of all adoptants.
+     */
     public List<Adoptant> getAllAdoptants() {
         return adoptantRepository.getAll();
     }
 
-    // Metodă pentru a obține un adoptant după ID
+    /**
+     * Retrieves an adoptant by its ID.
+     *
+     * @param id The ID of the adoptant.
+     * @return The adoptant object if found, otherwise null.
+     */
     public Adoptant getAdoptantById(int id) {
         return adoptantRepository.getById(id);
     }
 
-    // Metodă pentru a actualiza un adoptant
+    /**
+     * Updates the information of an adoptant in the system.
+     *
+     * @param adoptant The adoptant object with updated information.
+     */
     public void updateAdoptant(Adoptant adoptant) {
         adoptantRepository.update(adoptant);
     }
 
-    // Metodă pentru a șterge un adoptant
+    /**
+     * Deletes an adoptant by their ID.
+     *
+     * @param id The ID of the adoptant to be deleted.
+     */
     public void deleteAdoptant(int id) {
         adoptantRepository.delete(id);
     }
 
-    // Metodă pentru a obține cererile de adopție ale unui adoptant
+    /**
+     * Retrieves a list of adoption requests associated with a specific adoptant.
+     *
+     * @param adoptant The adoptant whose adoption requests are to be retrieved.
+     * @return A list of adoption requests made by the specified adoptant.
+     */
     public List<AdoptionRequest> getAdoptionRequestsByAdoptant(Adoptant adoptant) {
         return adoptionRequestRepository.getAll().stream()
                 .filter(request -> request.getAdoptant().equals(adoptant))
                 .collect(Collectors.toList());
     }
 
-    // Metodă pentru a face o cerere de adopție
+    /**
+     * Creates an adoption request for a specific adoptant and animal.
+     * The request is added to the adoption request repository.
+     *
+     * @param adoptant The adoptant making the adoption request.
+     * @param animal The animal being requested for adoption.
+     */
     public void makeAdoptionRequest(Adoptant adoptant, Animal animal) {
         if (adoptant == null || animal == null) {
             System.out.println("Invalid adoptant or animal.");
             return;
         }
 
-        // Crearea cererii de adopție
         AdoptionRequest request = new AdoptionRequest(0, adoptant, animal, new Date(), "Pending");
-
-        // Adăugarea cererii în repository-ul de cereri de adopție
         adoptionRequestRepository.add(request);
-
         System.out.println("Adoption request submitted successfully!");
     }
 
-    // Metodă pentru a filtra adoptanții în funcție de numărul cererilor de adopție
+    /**
+     * Filters adoptants based on the minimum number of adoption requests they have made.
+     *
+     * @param minRequests The minimum number of adoption requests.
+     * @return A list of adoptants who have made at least the specified number of requests.
+     */
     public List<Adoptant> filterAdoptantsByAdoptionRequests(int minRequests) {
         return adoptantRepository.getAll().stream()
                 .filter(adoptant -> getAdoptionRequestsByAdoptant(adoptant).size() >= minRequests)
                 .collect(Collectors.toList());
     }
 
-    // Metodă pentru a sorta adoptanții în funcție de numărul cererilor de adopție
+    /**
+     * Sorts adoptants by the number of adoption requests they have made in descending order.
+     *
+     * @return A list of adoptants sorted by the number of adoption requests.
+     */
     public List<Adoptant> sortAdoptantsByAdoptionRequests() {
         return adoptantRepository.getAll().stream()
                 .sorted((adoptant1, adoptant2) -> Integer.compare(
@@ -86,39 +132,56 @@ public class AdoptantService {
                 .collect(Collectors.toList());
     }
 
-    // Metodă pentru a obține cererile de adopție pentru un adoptant
+    /**
+     * Retrieves a list of adoption requests for a specific adoptant by their ID.
+     *
+     * @param adoptantId The ID of the adoptant.
+     * @return A list of adoption requests for the specified adoptant.
+     */
     public List<AdoptionRequest> getAdoptionRequestsForAdoptant(int adoptantId) {
         return adoptionRequestRepository.getAll().stream()
                 .filter(request -> request.getAdoptant().getId() == adoptantId)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Adds a new adoption request to the system.
+     *
+     * @param adoptionRequest The adoption request to be added.
+     */
     public void addAdoptionRequest(AdoptionRequest adoptionRequest) {
         adoptionRequestRepository.add(adoptionRequest);
     }
 
+    /**
+     * Generates a unique ID for a new adoptant.
+     *
+     * @return The generated unique ID.
+     */
     public int generateUniqueId() {
-        return adoptantRepository.generateUniqueId(); // adoptantRepository este instanța FileRepository
+        return adoptantRepository.generateUniqueId();
     }
 
+    /**
+     * Retrieves a list of adoptants sorted by the total number of adoptions they have made.
+     * The adoptants are sorted in descending order based on their adoption count.
+     *
+     * @return A list of adoptants sorted by their total number of adoptions.
+     */
     public List<Adoptant> getAdoptantsByTotalAdoptions() {
-        // Map pentru a stoca numărul de cereri pentru fiecare adoptant
         Map<Adoptant, Integer> adoptantAdoptionCount = new HashMap<>();
 
-        // Parcurge toate cererile de adopție și numără câte cereri are fiecare adoptant
         for (AdoptionRequest request : adoptionRequestRepository.getAll()) {
             Adoptant adoptant = request.getAdoptant();
             adoptantAdoptionCount.put(adoptant, adoptantAdoptionCount.getOrDefault(adoptant, 0) + 1);
         }
 
-        // Crează o listă de adoptanți sortată descrescător după numărul cererilor
         List<Adoptant> sortedAdoptants = new ArrayList<>(adoptantAdoptionCount.keySet());
         sortedAdoptants.sort((adoptant1, adoptant2) -> Integer.compare(
-                adoptantAdoptionCount.get(adoptant2), // Adopții mai multe vin mai întâi
+                adoptantAdoptionCount.get(adoptant2),
                 adoptantAdoptionCount.get(adoptant1)
         ));
 
         return sortedAdoptants;
     }
-
 }
