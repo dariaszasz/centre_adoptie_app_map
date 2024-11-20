@@ -49,4 +49,14 @@ public class VolunteerController {
     public List<Volunteer> filterVolunteersBySheltersCount(int minShelters) {
         return volunteerService.filterVolunteersBySheltersCount(minShelters);
     }
+
+    // Metodă pentru a atribui un animal unui voluntar
+    public String assignAnimalToVolunteer(int volunteerId, int animalId) {
+        return volunteerService.assignAnimalToVolunteer(volunteerId, animalId);
+    }
+
+    // Metodă pentru a genera un ID unic pentru un voluntar
+    public int generateUniqueId() {
+        return volunteerService.generateUniqueId();
+    }
 }

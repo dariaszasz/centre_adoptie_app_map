@@ -5,10 +5,12 @@ import java.util.List;
 
 public class Volunteer extends Person {
     private String experience;
+    private List<Animal> animals;
     private List<Shelter> shelters;
 
     public Volunteer(int id, String name, String contactDetails, String experience) {
         super(id, name, contactDetails);
+        this.animals = new ArrayList<>();
         this.experience = experience;
         this.shelters = new ArrayList<>();
     }
@@ -32,5 +34,11 @@ public class Volunteer extends Person {
     @Override
     public String toString() {
         return super.toString() + ", Experience: " + experience + ", Shelters: " + shelters.size();
+    }
+
+    public void addAnimal(Animal animal) {
+        if (animal != null) {
+            animals.add(animal);  // Add animal to the list
+        }
     }
 }

@@ -9,12 +9,14 @@ public class Animal extends BaseEntity implements Serializable {
     private HealthRecord healthRecord;
     private CarePlan carePlan;
     private String status;
+    private Volunteer assignedVolunteer;
 
     public Animal(int id, String name, AnimalType animalType, int age, String status) {
         super(id);  // Folosim id-ul din BaseEntity
         this.name = name;
         this.animalType = animalType;
         this.age = age;
+        this.assignedVolunteer = null;
         this.status = status;
     }
 
@@ -69,5 +71,13 @@ public class Animal extends BaseEntity implements Serializable {
     @Override
     public String toString() {
         return "Animal ID: " + getId() + ", Name: " + name + ", Type: " + animalType.getTypeName() + ", Age: " + age + ", Status: " + status;
+    }
+
+    public Volunteer getAssignedVolunteer() {
+        return assignedVolunteer;
+    }
+
+    public void setAssignedVolunteer(Volunteer assignedVolunteer) {
+        this.assignedVolunteer = assignedVolunteer;
     }
 }
