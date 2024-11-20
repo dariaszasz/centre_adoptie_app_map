@@ -88,27 +88,22 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        // Initialize repositories using FileRepository
         FileRepository<Animal> animalRepository = new FileRepository<>("animals.dat");
         FileRepository<Adoptant> adoptantRepository = new FileRepository<>("adoptants.dat");
         FileRepository<AdoptionRequest> adoptionRequestRepository = new FileRepository<>("adoption_requests.dat");
 
-        // Initialize services with their respective repositories
         AnimalService animalService = new AnimalService(animalRepository);
         AdoptantService adoptantService = new AdoptantService(adoptantRepository, adoptionRequestRepository);
         AdoptionRequestService adoptionRequestService = new AdoptionRequestService(adoptionRequestRepository, animalRepository, adoptantRepository);
 
-        // Initialize controllers with their services
         AnimalController animalController = new AnimalController(animalService);
         AdoptantController adoptantController = new AdoptantController(adoptantService, animalService);
         AdoptionRequestController adoptionRequestController = new AdoptionRequestController(adoptionRequestService);
 
-        // Initialize presentation layers for Animal, Adoptant, and AdoptionRequest
         AnimalManagement animalManagement = new AnimalManagement(animalController);
         AdoptantManagement adoptantManagement = new AdoptantManagement(adoptantController);
         AdoptionRequestManagement adoptionRequestManagement = new AdoptionRequestManagement(adoptionRequestController);
 
-        // Display the main menu to the user
         Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("\n--- Main Menu ---");
@@ -118,7 +113,7 @@ public class Main {
             System.out.println("4. Exit");
             System.out.print("Choose an option: ");
             int choice = scanner.nextInt();
-            scanner.nextLine();  // Consume newline
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
