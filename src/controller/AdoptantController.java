@@ -10,19 +10,31 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Controller class responsible for managing Adoptants and their adoption requests.
+ * It handles actions like adding, viewing, updating, and deleting adoptants,
+ * as well as managing adoption requests.
+ */
 public class AdoptantController {
     private AdoptantService adoptantService;
     private AnimalService animalService;
     private Scanner scanner;
 
-    // Constructor care primește serviciile necesare
+    /**
+     * Constructor that initializes the controller with necessary services.
+     *
+     * @param adoptantService The service responsible for adoptant operations.
+     * @param animalService   The service responsible for animal operations.
+     */
     public AdoptantController(AdoptantService adoptantService, AnimalService animalService) {
         this.adoptantService = adoptantService;
         this.animalService = animalService;
         this.scanner = new Scanner(System.in);
     }
 
-    // Metodă pentru a adăuga un adoptant
+    /**
+     * Adds a new adoptant by capturing their name and contact details.
+     */
     public void addAdoptant() {
         System.out.print("Enter adoptant name: ");
         String name = scanner.nextLine();
@@ -30,16 +42,18 @@ public class AdoptantController {
         String contactDetails = scanner.nextLine();
 
         Adoptant newAdoptant = new Adoptant(
-                adoptantService.generateUniqueId(), // Generează ID-ul
+                adoptantService.generateUniqueId(), // Generate unique ID
                 name,
                 contactDetails
         );
 
-        adoptantService.addAdoptant(newAdoptant); // Adaugă adoptantul
+        adoptantService.addAdoptant(newAdoptant); // Add adoptant
         System.out.println("Adoptant added successfully!");
     }
 
-    // Metodă pentru a vizualiza toți adoptanții
+    /**
+     * Displays a list of all adoptants.
+     */
     public void viewAllAdoptants() {
         List<Adoptant> adoptants = adoptantService.getAllAdoptants();
         if (adoptants.isEmpty()) {
@@ -49,11 +63,13 @@ public class AdoptantController {
         }
     }
 
-    // Metodă pentru a vizualiza un adoptant după ID
+    /**
+     * Views an adoptant based on their ID.
+     */
     public void viewAdoptantById() {
         System.out.print("Enter adoptant ID: ");
         int adoptantId = scanner.nextInt();
-        scanner.nextLine();  // Consumă newline-ul rămas
+        scanner.nextLine();  // Consume the newline
 
         Adoptant adoptant = adoptantService.getAdoptantById(adoptantId);
         if (adoptant != null) {
@@ -63,11 +79,13 @@ public class AdoptantController {
         }
     }
 
-    // Metodă pentru a actualiza datele unui adoptant
+    /**
+     * Updates an adoptant's details such as their name and contact details.
+     */
     public void updateAdoptant() {
         System.out.print("Enter adoptant ID to update: ");
         int adoptantId = scanner.nextInt();
-        scanner.nextLine();  // Consumă newline-ul rămas
+        scanner.nextLine();  // Consume the newline
 
         Adoptant adoptant = adoptantService.getAdoptantById(adoptantId);
         if (adoptant != null) {
@@ -90,21 +108,25 @@ public class AdoptantController {
         }
     }
 
-    // Metodă pentru a șterge un adoptant
+    /**
+     * Deletes an adoptant by their ID.
+     */
     public void deleteAdoptant() {
         System.out.print("Enter adoptant ID to delete: ");
         int adoptantId = scanner.nextInt();
-        scanner.nextLine();  // Consumă newline-ul rămas
+        scanner.nextLine();  // Consume the newline
 
         adoptantService.deleteAdoptant(adoptantId);
         System.out.println("Adoptant deleted successfully!");
     }
 
-    // Metodă pentru a vizualiza cererile de adopție ale unui adoptant
+    /**
+     * Views all adoption requests for a specific adoptant by their ID.
+     */
     public void viewAdoptionRequests() {
         System.out.print("Enter adoptant ID: ");
         int adoptantId = scanner.nextInt();
-        scanner.nextLine();  // Consumă newline-ul rămas
+        scanner.nextLine();  // Consume the newline
 
         Adoptant adoptant = adoptantService.getAdoptantById(adoptantId);
         if (adoptant != null) {
@@ -119,16 +141,18 @@ public class AdoptantController {
         }
     }
 
-    // Metodă pentru a face o cerere de adopție
+    /**
+     * Makes an adoption request for a specific animal by an adoptant.
+     */
     public void makeAdoptionRequest() {
         System.out.print("Enter adoptant ID: ");
         int adoptantId = scanner.nextInt();
         System.out.print("Enter animal ID: ");
         int animalId = scanner.nextInt();
-        scanner.nextLine();  // Consumă newline-ul rămas
+        scanner.nextLine();  // Consume the newline
 
         Adoptant adoptant = adoptantService.getAdoptantById(adoptantId);
-        Animal animal = animalService.getAnimalById(animalId);  // presupunem că animalService există și oferă această metodă
+        Animal animal = animalService.getAnimalById(animalId);
 
         if (adoptant != null && animal != null) {
             adoptantService.makeAdoptionRequest(adoptant, animal);
@@ -137,11 +161,13 @@ public class AdoptantController {
         }
     }
 
-    // Metodă pentru a vizualiza adoptanții cu cereri de adopție
+    /**
+     * Views adoptants who have made a certain minimum number of adoption requests.
+     */
     public void viewAdoptantsWithAdoptionRequests() {
         System.out.print("Enter minimum number of adoption requests: ");
         int minRequests = scanner.nextInt();
-        scanner.nextLine();  // Consumă newline-ul rămas
+        scanner.nextLine();  // Consume the newline
 
         List<Adoptant> filteredAdoptants = adoptantService.filterAdoptantsByAdoptionRequests(minRequests);
         if (filteredAdoptants.isEmpty()) {
@@ -151,7 +177,9 @@ public class AdoptantController {
         }
     }
 
-    // Metodă pentru a sorta adoptanții după cererile de adopție
+    /**
+     * Sorts and views adoptants based on the number of adoption requests.
+     */
     public void sortAdoptantsByAdoptionRequests() {
         List<Adoptant> sortedAdoptants = adoptantService.sortAdoptantsByAdoptionRequests();
         if (sortedAdoptants.isEmpty()) {
@@ -161,7 +189,9 @@ public class AdoptantController {
         }
     }
 
-    // Metodă pentru a vizualiza adoptanții sortați după numărul total de cereri de adopție
+    /**
+     * Views adoptants sorted by the total number of adoptions they have made.
+     */
     public void viewAdoptantsSortedByTotalAdoptions() {
         List<Adoptant> sortedAdoptants = adoptantService.getAdoptantsByTotalAdoptions();
         if (sortedAdoptants.isEmpty()) {
@@ -176,26 +206,22 @@ public class AdoptantController {
         return adoptantService.getAllAdoptants();
     }
 
-    // Metoda pentru a obține un adoptant după ID
     public Adoptant getAdoptantById(int id) {
         return adoptantService.getAdoptantById(id);
     }
 
-    // Metoda pentru a actualiza un adoptant
     public void updateAdoptant(Adoptant adoptant) {
         adoptantService.updateAdoptant(adoptant);
     }
 
-    // Metoda pentru a șterge un adoptant după ID
     public void deleteAdoptant(int id) {
         adoptantService.deleteAdoptant(id);
     }
 
     public void viewAdoptantsWithAdoptionRequests(int adoptantId) {
-        Adoptant adoptant = adoptantService.getAdoptantById(adoptantId); // Folosește serviciul pentru a obține adoptantul
+        Adoptant adoptant = adoptantService.getAdoptantById(adoptantId);
         if (adoptant != null) {
             System.out.println("Adoptant: " + adoptant.getName());
-            // Aici presupunem că metoda de filtrare a cererilor de adopție pentru un adoptant există în AdoptantService
             List<AdoptionRequest> adoptionRequests = adoptantService.getAdoptionRequestsForAdoptant(adoptantId);
             if (adoptionRequests.isEmpty()) {
                 System.out.println("No adoption requests for this adoptant.");
@@ -207,20 +233,25 @@ public class AdoptantController {
         }
     }
 
-    // Metoda pentru a crea o cerere de adopție
+    /**
+     * Makes an adoption request for a specific animal by an adoptant, identified by IDs.
+     */
     public void makeAdoptionRequest(int adoptantId, int animalId) {
         Adoptant adoptant = adoptantService.getAdoptantById(adoptantId);
         Animal animal = animalService.getAnimalById(animalId);
 
         if (adoptant != null && animal != null) {
             AdoptionRequest adoptionRequest = new AdoptionRequest(0, adoptant, animal, new Date(), "Pending");
-            adoptantService.addAdoptionRequest(adoptionRequest);  // Presupunând că există această metodă în AdoptantService
+            adoptantService.addAdoptionRequest(adoptionRequest);
             System.out.println("Adoption request made successfully!");
         } else {
             System.out.println("Invalid adoptant ID or animal ID.");
         }
     }
 
+    /**
+     * Views all adoption requests for a specific adoptant by their ID.
+     */
     public void viewAdoptionRequests(int adoptantId) {
         List<AdoptionRequest> adoptionRequests = adoptantService.getAdoptionRequestsForAdoptant(adoptantId);
         if (adoptionRequests != null && !adoptionRequests.isEmpty()) {
@@ -230,6 +261,9 @@ public class AdoptantController {
         }
     }
 
+    /**
+     * Adds a new adoption request.
+     */
     public void addAdoptionRequest(AdoptionRequest adoptionRequest) {
         adoptantService.addAdoptionRequest(adoptionRequest);
         System.out.println("Adoption request added successfully.");
