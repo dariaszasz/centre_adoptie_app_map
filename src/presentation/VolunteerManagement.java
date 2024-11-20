@@ -5,13 +5,28 @@ import models.Volunteer;
 
 import java.util.Scanner;
 
+/**
+ * Handles the user interface for managing volunteers in the system.
+ * This class allows the user to interact with the volunteer management system,
+ * including adding new volunteers, assigning animals to volunteers, and exiting the system.
+ */
 public class VolunteerManagement {
     private VolunteerController volunteerController;
 
+    /**
+     * Constructor to initialize the VolunteerManagement with a given VolunteerController.
+     *
+     * @param volunteerController The VolunteerController used to manage volunteer-related operations.
+     */
     public VolunteerManagement(VolunteerController volunteerController) {
         this.volunteerController = volunteerController;
     }
 
+    /**
+     * Displays the menu and handles the user's input to manage volunteers.
+     * The menu includes options for adding a volunteer, assigning an animal to a volunteer,
+     * and exiting the program.
+     */
     public void displayMenu() {
         Scanner scanner = new Scanner(System.in);
         int choice;
@@ -50,6 +65,11 @@ public class VolunteerManagement {
         }
     }
 
+    /**
+     * Prompts the user for volunteer details and adds a new volunteer to the system.
+     *
+     * @param scanner The scanner object used to read user input.
+     */
     private void addVolunteer(Scanner scanner) {
         System.out.println("\n--- Add New Volunteer ---");
         // Generarea ID-ului unic pentru voluntar
