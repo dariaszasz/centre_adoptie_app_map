@@ -5,11 +5,13 @@ import java.util.List;
 
 public class Volunteer extends Person {
     private String experience;
+    private List<Animal> animals;
     private List<Shelter> shelters;
 
     public Volunteer(int id, String name, String contactDetails, String experience) {
         super(id, name, contactDetails);
         this.experience = experience;
+        this.animals = new ArrayList<>();
         this.shelters = new ArrayList<>();
     }
 
@@ -32,5 +34,13 @@ public class Volunteer extends Person {
     @Override
     public String toString() {
         return super.toString() + ", Experience: " + experience + ", Shelters: " + shelters.size();
+    }
+
+    public List<Animal> getAnimals() {
+        return animals;
+    }
+
+    public void addAnimal(Animal animal) {
+        this.animals.add(animal);
     }
 }
