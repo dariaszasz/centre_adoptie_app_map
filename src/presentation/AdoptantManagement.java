@@ -8,16 +8,29 @@ import models.AdoptionRequest;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * This class handles the presentation logic for managing adoptants.
+ * It provides a menu-driven interface to allow users to add, view, update,
+ * delete adoptants, and manage adoption requests.
+ */
 public class AdoptantManagement {
     private AdoptantController adoptantController;
     private Scanner scanner;
 
+    /**
+     * Constructor that initializes the AdoptantController and Scanner.
+     *
+     * @param adoptantController the controller used to manage adoptants
+     */
     public AdoptantManagement(AdoptantController adoptantController) {
         this.adoptantController = adoptantController;
         this.scanner = new Scanner(System.in);
     }
 
-    // Display menu to the user
+    /**
+     * Displays a menu to the user and handles user input for performing actions on adoptants.
+     * The user can choose to add, view, update, delete adoptants, or manage adoption requests.
+     */
     public void displayMenu() {
         while (true) {
             System.out.println("\n--- Adoptant Management ---");
@@ -73,12 +86,17 @@ public class AdoptantManagement {
         }
     }
 
-    // Add a new adoptant
+    /**
+     * Adds a new adoptant using the AdoptantController.
+     */
     private void addAdoptant() {
         adoptantController.addAdoptant();
     }
 
-    // View all adoptants
+    /**
+     * Displays all adoptants by fetching them from the AdoptantController.
+     * If no adoptants are found, a message is shown to the user.
+     */
     private void viewAllAdoptants() {
         List<Adoptant> adoptants = adoptantController.getAllAdoptants();
         if (adoptants.isEmpty()) {
@@ -88,7 +106,10 @@ public class AdoptantManagement {
         }
     }
 
-    // View adoptant by ID
+    /**
+     * Displays the details of an adoptant by their ID.
+     * If the adoptant is not found, a message is shown to the user.
+     */
     private void viewAdoptantById() {
         System.out.print("Enter adoptant ID: ");
         int adoptantId = scanner.nextInt();
@@ -102,7 +123,10 @@ public class AdoptantManagement {
         }
     }
 
-    // Update adoptant details
+    /**
+     * Allows the user to update an adoptant's details.
+     * The user can update the name and contact details of the adoptant.
+     */
     private void updateAdoptant() {
         System.out.print("Enter adoptant ID to update: ");
         int adoptantId = scanner.nextInt();
@@ -129,7 +153,9 @@ public class AdoptantManagement {
         }
     }
 
-    // Delete an adoptant
+    /**
+     * Deletes an adoptant by their ID using the AdoptantController.
+     */
     private void deleteAdoptant() {
         System.out.print("Enter adoptant ID to delete: ");
         int adoptantId = scanner.nextInt();
@@ -139,7 +165,9 @@ public class AdoptantManagement {
         System.out.println("Adoptant deleted successfully!");
     }
 
-    // View all adoption requests for an adoptant
+    /**
+     * Displays all adoption requests for a specific adoptant by their ID.
+     */
     private void viewAdoptionRequests() {
         System.out.print("Enter adoptant ID to view adoption requests: ");
         int adoptantId = scanner.nextInt();
@@ -148,7 +176,10 @@ public class AdoptantManagement {
         adoptantController.viewAdoptionRequests(adoptantId);
     }
 
-    // Make an adoption request for an animal
+    /**
+     * Allows the user to make an adoption request for an animal.
+     * The user must provide both the adoptant ID and the animal ID.
+     */
     private void makeAdoptionRequest() {
         System.out.print("Enter adoptant ID: ");
         int adoptantId = scanner.nextInt();
@@ -160,7 +191,9 @@ public class AdoptantManagement {
         adoptantController.makeAdoptionRequest(adoptantId, animalId);
     }
 
-    // View adoptants with a minimum number of adoption requests
+    /**
+     * Displays adoptants who have made a minimum number of adoption requests.
+     */
     private void viewAdoptantsWithAdoptionRequests() {
         System.out.print("Enter minimum number of adoption requests: ");
         int minRequests = scanner.nextInt();
@@ -169,7 +202,9 @@ public class AdoptantManagement {
         adoptantController.viewAdoptantsWithAdoptionRequests(minRequests);
     }
 
-    // View adoptants sorted by the total number of adoptions
+    /**
+     * Displays adoptants sorted by the total number of adoptions they have made.
+     */
     private void viewAdoptantsSortedByTotalAdoptions() {
         adoptantController.viewAdoptantsSortedByTotalAdoptions();
     }
