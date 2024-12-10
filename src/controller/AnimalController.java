@@ -1,13 +1,11 @@
-/**
- * Controller class for managing animals.
- * Provides operations to add, retrieve, update, delete, sort, and filter animals.
- */
 package controller;
 
 import models.Animal;
 import service.AnimalService;
+import exceptions.EntityNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 
 public class AnimalController {
     private AnimalService animalService;
@@ -28,8 +26,12 @@ public class AnimalController {
      * @return a success message indicating the animal was added
      */
     public String addAnimal(Animal animal) {
-        animalService.addAnimal(animal);  // Add the animal to the service
-        return "Animal added successfully!";
+        try {
+            animalService.addAnimal(animal);  // Add the animal to the service
+            return "Animal added successfully!";
+        } catch (Exception e) {
+            return "Error adding animal: " + e.getMessage();
+        }
     }
 
     /**
@@ -38,7 +40,16 @@ public class AnimalController {
      * @return a list of all animals
      */
     public List<Animal> getAllAnimals() {
-        return animalService.getAllAnimals();
+        try {
+            List<Animal> animals = animalService.getAllAnimals();
+            if (animals.isEmpty()) {
+                System.out.println("No animals found.");
+            }
+            return animals;
+        } catch (Exception e) {
+            System.out.println("Error retrieving animals: " + e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -48,7 +59,19 @@ public class AnimalController {
      * @return the animal with the specified ID, or null if not found
      */
     public Animal getAnimalById(int id) {
-        return animalService.getAnimalById(id);
+        try {
+            Optional<Animal> animal = animalService.getAnimalById(id);
+            if (animal.isEmpty()) {
+                throw new EntityNotFoundException("Animal with ID " + id + " not found.");
+            }
+            return animal.orElse(null);
+        } catch (EntityNotFoundException e) {
+            System.out.println(e.getMessage());
+            return null;
+        } catch (Exception e) {
+            System.out.println("Error retrieving animal: " + e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -58,8 +81,14 @@ public class AnimalController {
      * @return a success message indicating the animal was updated
      */
     public String updateAnimal(Animal animal) {
-        animalService.updateAnimal(animal);
-        return "Animal updated successfully!";
+        try {
+            animalService.updateAnimal(animal);
+            return "Animal updated successfully!";
+        } catch (EntityNotFoundException e) {
+            return "Error updating animal: " + e.getMessage();
+        } catch (Exception e) {
+            return "Error updating animal: " + e.getMessage();
+        }
     }
 
     /**
@@ -69,8 +98,18 @@ public class AnimalController {
      * @return a success message indicating the animal was deleted
      */
     public String deleteAnimal(int id) {
-        animalService.deleteAnimal(id);
-        return "Animal deleted successfully!";
+        try {
+            boolean deleted = animalService.deleteAnimal(id);
+            if (deleted) {
+                return "Animal deleted successfully!";
+            } else {
+                throw new EntityNotFoundException("Animal with ID " + id + " not found.");
+            }
+        } catch (EntityNotFoundException e) {
+            return "Error deleting animal: " + e.getMessage();
+        } catch (Exception e) {
+            return "Error deleting animal: " + e.getMessage();
+        }
     }
 
     /**
@@ -79,7 +118,12 @@ public class AnimalController {
      * @return a list of animals sorted by age
      */
     public List<Animal> sortAnimalsByAge() {
-        return animalService.sortAnimalsByAge();
+        try {
+            return animalService.sortAnimalsByAge();
+        } catch (Exception e) {
+            System.out.println("Error sorting animals by age: " + e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -89,6 +133,11 @@ public class AnimalController {
      * @return a list of animals matching the specified status
      */
     public List<Animal> filterAnimalsByStatus(String status) {
-        return animalService.filterAnimalsByStatus(status);
+        try {
+            return animalService.filterAnimalsByStatus(status);
+        } catch (Exception e) {
+            System.out.println("Error filtering animals by status: " + e.getMessage());
+            return null;
+        }
     }
 }

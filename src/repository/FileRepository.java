@@ -1,5 +1,7 @@
 package repository;
 
+import exceptions.DatabaseException;
+import models.Animal;
 import models.BaseEntity;
 
 import java.io.*;
@@ -88,7 +90,7 @@ public class FileRepository<T extends BaseEntity> implements IRepository<T> {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
             entities = (List<T>) ois.readObject(); // Deserialize the list of entities
         } catch (IOException | ClassNotFoundException e) {
-            // Handle exception when file might be empty or not exist (returns empty list)
+            throw new DatabaseException("Error while reading from file: " + fileName, e);
         }
         return entities;
     }
@@ -103,7 +105,7 @@ public class FileRepository<T extends BaseEntity> implements IRepository<T> {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
             oos.writeObject(entities); // Serialize the entities and save them to the file
         } catch (IOException e) {
-            e.printStackTrace(); // Log the exception if something goes wrong
+            throw new DatabaseException("Error while writing to file: " + fileName, e);
         }
     }
 
@@ -122,4 +124,25 @@ public class FileRepository<T extends BaseEntity> implements IRepository<T> {
                 .max() // Get the maximum ID
                 .orElse(0) + 1; // If no entities exist, start from 1
     }
+
+    @Override
+    public List<T> findByStatus(String status) {
+        List<T> entities = getAll(); // Obține toate entitățile
+        List<T> filteredEntities = new ArrayList<>();
+
+        for (T entity : entities) {
+            if (entity instanceof Animal) { // Verificăm dacă entitatea este de tip Animal
+                Animal animal = (Animal) entity; // Facem cast la Animal
+                if (animal.getStatus().equals(status)) {
+                    filteredEntities.add((T) animal); // Adăugăm animalul dacă statusul se potrivește
+                }
+            }
+        }
+
+        return filteredEntities;
+    }
+
+
+
+
 }

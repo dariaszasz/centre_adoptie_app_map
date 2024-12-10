@@ -1,93 +1,89 @@
 package service;
 
+import exceptions.BusinessLogicException;
 import models.Veterinarian;
 import repository.IRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Service class responsible for managing veterinarian-related operations.
- * It interacts with the repository to add, update, delete, and retrieve veterinarians.
- */
 public class VeterinarianService {
     private IRepository<Veterinarian> veterinarianRepository;
 
-    /**
-     * Constructor for the VeterinarianService.
-     *
-     * @param veterinarianRepository The repository for veterinarians.
-     */
     public VeterinarianService(IRepository<Veterinarian> veterinarianRepository) {
         this.veterinarianRepository = veterinarianRepository;
     }
 
-    /**
-     * Adds a new veterinarian to the repository.
-     *
-     * @param veterinarian The veterinarian to be added.
-     */
     public void addVeterinarian(Veterinarian veterinarian) {
+        if (veterinarian == null) {
+            throw new BusinessLogicException("Veterinarian cannot be null");
+        }
         veterinarianRepository.add(veterinarian);
     }
 
-    /**
-     * Retrieves all veterinarians from the repository.
-     *
-     * @return A list of all veterinarians.
-     */
     public List<Veterinarian> getAllVeterinarians() {
-        return veterinarianRepository.getAll();
+        List<Veterinarian> veterinarians = veterinarianRepository.getAll();
+        if (veterinarians.isEmpty()) {
+            throw new BusinessLogicException("No veterinarians available.");
+        }
+        return veterinarians;
     }
 
-    /**
-     * Retrieves a veterinarian by their ID.
-     *
-     * @param id The ID of the veterinarian to retrieve.
-     * @return The veterinarian with the given ID, or null if not found.
-     */
     public Veterinarian getVeterinarianById(int id) {
-        return veterinarianRepository.getById(id);
+        Veterinarian veterinarian = veterinarianRepository.getById(id);
+        if (veterinarian == null) {
+            throw new BusinessLogicException("Veterinarian with ID " + id + " not found.");
+        }
+        return veterinarian;
     }
 
-    /**
-     * Updates the information of an existing veterinarian in the repository.
-     *
-     * @param veterinarian The veterinarian with updated information.
-     */
     public void updateVeterinarian(Veterinarian veterinarian) {
+        if (veterinarian == null) {
+            throw new BusinessLogicException("Veterinarian cannot be null");
+        }
+
+        Veterinarian existingVeterinarian = veterinarianRepository.getById(veterinarian.getId());
+        if (existingVeterinarian == null) {
+            throw new BusinessLogicException("Veterinarian with ID " + veterinarian.getId() + " not found.");
+        }
+
         veterinarianRepository.update(veterinarian);
     }
 
-    /**
-     * Deletes a veterinarian from the repository by their ID.
-     *
-     * @param id The ID of the veterinarian to be deleted.
-     */
-    public void deleteVeterinarian(int id) {
+    public boolean deleteVeterinarian(int id) {
+        Veterinarian veterinarian = veterinarianRepository.getById(id);
+        if (veterinarian == null) {
+            throw new BusinessLogicException("Veterinarian with ID " + id + " not found.");
+        }
+
         veterinarianRepository.delete(id);
+        return true; // Return true to indicate successful deletion
     }
 
-    /**
-     * Sorts veterinarians by their specialization in alphabetical order.
-     *
-     * @return A list of veterinarians sorted by specialization.
-     */
     public List<Veterinarian> sortVeterinariansBySpecialization() {
-        return veterinarianRepository.getAll().stream()
+        List<Veterinarian> veterinarians = veterinarianRepository.getAll();
+        if (veterinarians.isEmpty()) {
+            throw new BusinessLogicException("No veterinarians available to sort.");
+        }
+
+        return veterinarians.stream()
                 .sorted((v1, v2) -> v1.getSpecialization().compareTo(v2.getSpecialization()))
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Filters veterinarians based on their specialization.
-     *
-     * @param specialization The specialization to filter veterinarians by.
-     * @return A list of veterinarians that match the given specialization.
-     */
     public List<Veterinarian> filterVeterinariansBySpecialization(String specialization) {
-        return veterinarianRepository.getAll().stream()
+        if (specialization == null || specialization.isEmpty()) {
+            throw new BusinessLogicException("Specialization must be provided.");
+        }
+
+        List<Veterinarian> veterinarians = veterinarianRepository.getAll();
+        List<Veterinarian> filteredVeterinarians = veterinarians.stream()
                 .filter(veterinarian -> veterinarian.getSpecialization().equalsIgnoreCase(specialization))
                 .collect(Collectors.toList());
+
+        if (filteredVeterinarians.isEmpty()) {
+            throw new BusinessLogicException("No veterinarians found with specialization: " + specialization);
+        }
+        return filteredVeterinarians;
     }
 }

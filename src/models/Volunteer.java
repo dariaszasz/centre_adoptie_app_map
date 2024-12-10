@@ -2,6 +2,7 @@ package models;
 
 import java.util.ArrayList;
 import java.util.List;
+import models.interfaces.IStatusEntity;
 
 /**
  * Represents a volunteer in the system.
@@ -9,10 +10,12 @@ import java.util.List;
  * This class extends {@link Person} and contains additional information about the volunteer's experience,
  * the animals they care for, and the shelters they are associated with.
  */
-public class Volunteer extends Person {
+public class Volunteer extends Person implements IStatusEntity{
     private String experience;
     private List<Animal> animals;
     private List<Shelter> shelters;
+    private List<Animal> assignedAnimals;
+    private String status;
 
     /**
      * Constructor to initialize a Volunteer object with the provided details.
@@ -27,6 +30,8 @@ public class Volunteer extends Person {
         this.animals = new ArrayList<>();
         this.experience = experience;
         this.shelters = new ArrayList<>();
+        this.assignedAnimals = new ArrayList<>();
+        this.status = status;
     }
 
     /**
@@ -82,8 +87,29 @@ public class Volunteer extends Person {
      * @param animal The animal to add to the list of animals the volunteer is responsible for.
      */
     public void addAnimal(Animal animal) {
-        if (animal != null) {
-            animals.add(animal);  // Add animal to the list
-        }
+        this.assignedAnimals.add(animal);
+    }
+
+    public List<Animal> getAssignedAnimals() {
+        return assignedAnimals;
+    }
+
+    /**
+     * Implements the getStatus method from the IStatusEntity interface.
+     *
+     * @return the status of the volunteer
+     */
+    @Override
+    public String getStatus() {
+        return status;  // Returnează statusul voluntarului
+    }
+
+    /**
+     * Sets the status of the volunteer.
+     *
+     * @param status the status to set
+     */
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

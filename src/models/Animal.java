@@ -1,5 +1,7 @@
 package models;
 
+import models.interfaces.IStatusEntity;
+
 import java.io.Serializable;
 
 /**
@@ -8,7 +10,7 @@ import java.io.Serializable;
  * care plan, status, and assigned volunteer.
  * It extends {@link BaseEntity} and implements {@link Serializable} for persistence.
  */
-public class Animal extends BaseEntity implements Serializable {
+public class Animal extends BaseEntity implements IStatusEntity, Serializable {
     private String name;
     private AnimalType animalType;
     private int age;

@@ -1,10 +1,13 @@
 package repository;
 
+import exceptions.DatabaseException;
+import models.Animal;
+import models.BaseEntity;
+import models.interfaces.IStatusEntity;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import models.BaseEntity;
 
 /**
  * An in-memory implementation of the {@link IRepository} interface for managing entities.
@@ -13,13 +16,13 @@ import models.BaseEntity;
  *
  * @param <T> The type of entity being managed, which must extend {@link BaseEntity}.
  */
-public class InMemoryRepository<T extends BaseEntity> implements IRepository<T> {
+public class InMemoryRepository<T extends BaseEntity & IStatusEntity> implements IRepository<T> {
     private List<T> entities = new ArrayList<>(); // List to store all entities
     private int currentId = 1; // Counter to generate unique IDs for entities
 
     /**
      * Adds a new entity to the repository.
-     * If an entity with the same ID already exists, it will not be added.
+     * If an entity with the same ID already exists, it will throw a DatabaseException.
      *
      * @param entity The entity to add.
      */
@@ -29,7 +32,7 @@ public class InMemoryRepository<T extends BaseEntity> implements IRepository<T> 
                 .anyMatch(e -> e.getId() == entity.getId());
 
         if (exists) {
-            System.out.println("An entity with this ID already exists.");
+            throw new DatabaseException("An entity with this ID already exists.");
         } else {
             entities.add(entity);
             System.out.println("Entity added successfully.");
@@ -62,36 +65,39 @@ public class InMemoryRepository<T extends BaseEntity> implements IRepository<T> 
 
     /**
      * Updates an existing entity in the repository.
-     * If the entity is not found, a message will be displayed.
+     * If the entity is not found, a DatabaseException is thrown.
      *
      * @param entity The updated entity to replace the existing one.
      */
     @Override
     public void update(T entity) {
+        boolean found = false;
         for (int i = 0; i < entities.size(); i++) {
             if (entities.get(i).getId() == entity.getId()) {
                 entities.set(i, entity);
+                found = true;
                 System.out.println("Entity updated successfully.");
-                return;
+                break;
             }
         }
-        System.out.println("Entity with the given ID not found.");
+        if (!found) {
+            throw new DatabaseException("Entity with the given ID not found.");
+        }
     }
 
     /**
      * Deletes an entity from the repository by its ID.
-     * If the entity is not found, a message will be displayed.
+     * If the entity is not found, a DatabaseException is thrown.
      *
      * @param id The ID of the entity to delete.
      */
     @Override
     public void delete(int id) {
         boolean removed = entities.removeIf(entity -> entity.getId() == id);
-        if (removed) {
-            System.out.println("Entity deleted successfully.");
-        } else {
-            System.out.println("Entity with the given ID not found.");
+        if (!removed) {
+            throw new DatabaseException("Entity with the given ID not found.");
         }
+        System.out.println("Entity deleted successfully.");
     }
 
     /**
@@ -103,4 +109,21 @@ public class InMemoryRepository<T extends BaseEntity> implements IRepository<T> 
     public int generateUniqueId() {
         return currentId++;
     }
+
+    // Implementarea metodei findByStatus
+    @Override
+    public List<T> findByStatus(String status) {
+        List<T> filteredEntities = new ArrayList<>();
+        for (T entity : entities) {
+            if (entity instanceof IStatusEntity) {  // Verifici doar entitățile care implementează IStatusEntity
+                IStatusEntity statusEntity = (IStatusEntity) entity;
+                if (statusEntity.getStatus().equals(status)) {
+                    filteredEntities.add(entity);
+                }
+            }
+        }
+        return filteredEntities;
+    }
+
+
 }
