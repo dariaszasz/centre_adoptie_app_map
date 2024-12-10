@@ -2,12 +2,13 @@ package models;
 
 import java.io.Serializable;
 import java.util.Date;
+import models.interfaces.IStatusEntity;
 
 /**
  * Class representing an adoption request made by an adoptant for an animal.
  * It extends the BaseEntity class and implements Serializable for data persistence.
  */
-public class AdoptionRequest extends BaseEntity implements Serializable {
+public class AdoptionRequest extends BaseEntity implements Serializable, IStatusEntity {
     private static final long serialVersionUID = 1L;
 
     private int id;

@@ -2,6 +2,7 @@ package controller;
 
 import models.Volunteer;
 import service.VolunteerService;
+import exceptions.EntityNotFoundException;
 
 import java.util.List;
 
@@ -29,8 +30,12 @@ public class VolunteerController {
      * @return A success message indicating the volunteer has been added.
      */
     public String addVolunteer(Volunteer volunteer) {
-        volunteerService.addVolunteer(volunteer);
-        return "Volunteer added successfully!";
+        try {
+            volunteerService.addVolunteer(volunteer);
+            return "Volunteer added successfully!";
+        } catch (Exception e) {
+            return "Error adding volunteer: " + e.getMessage();
+        }
     }
 
     /**
@@ -39,7 +44,16 @@ public class VolunteerController {
      * @return A list of all volunteers.
      */
     public List<Volunteer> getAllVolunteers() {
-        return volunteerService.getAllVolunteers();
+        try {
+            List<Volunteer> volunteers = volunteerService.getAllVolunteers();
+            if (volunteers.isEmpty()) {
+                System.out.println("No volunteers found.");
+            }
+            return volunteers;
+        } catch (Exception e) {
+            System.out.println("Error retrieving volunteers: " + e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -49,7 +63,19 @@ public class VolunteerController {
      * @return The volunteer with the specified ID.
      */
     public Volunteer getVolunteerById(int id) {
-        return volunteerService.getVolunteerById(id);
+        try {
+            Volunteer volunteer = volunteerService.getVolunteerById(id);
+            if (volunteer == null) {
+                throw new EntityNotFoundException("Volunteer with ID " + id + " not found.");
+            }
+            return volunteer;
+        } catch (EntityNotFoundException e) {
+            System.out.println(e.getMessage());
+            return null;
+        } catch (Exception e) {
+            System.out.println("Error retrieving volunteer: " + e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -59,8 +85,14 @@ public class VolunteerController {
      * @return A success message indicating the volunteer has been updated.
      */
     public String updateVolunteer(Volunteer volunteer) {
-        volunteerService.updateVolunteer(volunteer);
-        return "Volunteer updated successfully!";
+        try {
+            volunteerService.updateVolunteer(volunteer);
+            return "Volunteer updated successfully!";
+        } catch (EntityNotFoundException e) {
+            return "Error updating volunteer: " + e.getMessage();
+        } catch (Exception e) {
+            return "Error updating volunteer: " + e.getMessage();
+        }
     }
 
     /**
@@ -70,8 +102,18 @@ public class VolunteerController {
      * @return A success message indicating the volunteer has been deleted.
      */
     public String deleteVolunteer(int id) {
-        volunteerService.deleteVolunteer(id);
-        return "Volunteer deleted successfully!";
+        try {
+            boolean deleted = volunteerService.deleteVolunteer(id);
+            if (deleted) {
+                return "Volunteer deleted successfully!";
+            } else {
+                throw new EntityNotFoundException("Volunteer with ID " + id + " not found.");
+            }
+        } catch (EntityNotFoundException e) {
+            return "Error deleting volunteer: " + e.getMessage();
+        } catch (Exception e) {
+            return "Error deleting volunteer: " + e.getMessage();
+        }
     }
 
     /**
@@ -80,7 +122,12 @@ public class VolunteerController {
      * @return A list of volunteers sorted by experience.
      */
     public List<Volunteer> sortVolunteersByExperience() {
-        return volunteerService.sortVolunteersByExperience();
+        try {
+            return volunteerService.sortVolunteersByExperience();
+        } catch (Exception e) {
+            System.out.println("Error sorting volunteers by experience: " + e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -90,7 +137,12 @@ public class VolunteerController {
      * @return A list of volunteers who have worked with at least the specified number of shelters.
      */
     public List<Volunteer> filterVolunteersBySheltersCount(int minShelters) {
-        return volunteerService.filterVolunteersBySheltersCount(minShelters);
+        try {
+            return volunteerService.filterVolunteersBySheltersCount(minShelters);
+        } catch (Exception e) {
+            System.out.println("Error filtering volunteers by shelters count: " + e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -101,7 +153,12 @@ public class VolunteerController {
      * @return A message indicating whether the assignment was successful.
      */
     public String assignAnimalToVolunteer(int volunteerId, int animalId) {
-        return volunteerService.assignAnimalToVolunteer(volunteerId, animalId);
+        try {
+            return volunteerService.assignAnimalToVolunteer(volunteerId, animalId);
+        } catch (Exception e) {
+            System.out.println("Error assigning animal to volunteer: " + e.getMessage());
+            return "Error assigning animal to volunteer.";
+        }
     }
 
     /**
@@ -110,6 +167,11 @@ public class VolunteerController {
      * @return A unique ID.
      */
     public int generateUniqueId() {
-        return volunteerService.generateUniqueId();
+        try {
+            return volunteerService.generateUniqueId();
+        } catch (Exception e) {
+            System.out.println("Error generating unique ID: " + e.getMessage());
+            return -1;  // Indicates an error
+        }
     }
 }

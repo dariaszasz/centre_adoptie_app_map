@@ -4,6 +4,7 @@ import controller.AdoptantController;
 import models.Adoptant;
 import models.Animal;
 import models.AdoptionRequest;
+import exceptions.ValidationException;
 
 import java.util.List;
 import java.util.Scanner;
@@ -49,39 +50,43 @@ public class AdoptantManagement {
             int choice = scanner.nextInt();
             scanner.nextLine();  // Consume newline
 
-            switch (choice) {
-                case 1:
-                    addAdoptant();
-                    break;
-                case 2:
-                    viewAllAdoptants();
-                    break;
-                case 3:
-                    viewAdoptantById();
-                    break;
-                case 4:
-                    updateAdoptant();
-                    break;
-                case 5:
-                    deleteAdoptant();
-                    break;
-                case 6:
-                    viewAdoptionRequests();
-                    break;
-                case 7:
-                    makeAdoptionRequest();
-                    break;
-                case 8:
-                    viewAdoptantsWithAdoptionRequests();
-                    break;
-                case 9:
-                    viewAdoptantsSortedByTotalAdoptions();
-                    break;
-                case 10:
-                    System.out.println("Exiting...");
-                    return;
-                default:
-                    System.out.println("Invalid option, try again.");
+            try {
+                switch (choice) {
+                    case 1:
+                        addAdoptant();
+                        break;
+                    case 2:
+                        viewAllAdoptants();
+                        break;
+                    case 3:
+                        viewAdoptantById();
+                        break;
+                    case 4:
+                        updateAdoptant();
+                        break;
+                    case 5:
+                        deleteAdoptant();
+                        break;
+                    case 6:
+                        viewAdoptionRequests();
+                        break;
+                    case 7:
+                        makeAdoptionRequest();
+                        break;
+                    case 8:
+                        viewAdoptantsWithAdoptionRequests();
+                        break;
+                    case 9:
+                        viewAdoptantsSortedByTotalAdoptions();
+                        break;
+                    case 10:
+                        System.out.println("Exiting...");
+                        return;
+                    default:
+                        System.out.println("Invalid option, try again.");
+                }
+            } catch (ValidationException e) {
+                System.out.println("Validation Error: " + e.getMessage());
             }
         }
     }
@@ -90,19 +95,34 @@ public class AdoptantManagement {
      * Adds a new adoptant using the AdoptantController.
      */
     private void addAdoptant() {
-        adoptantController.addAdoptant();
+        try {
+            System.out.print("Enter adoptant name: ");
+            String name = scanner.nextLine();
+            System.out.print("Enter adoptant contact details: ");
+            String contactDetails = scanner.nextLine();
+
+            // Apelează metoda addAdoptant cu parametrii
+            adoptantController.addAdoptant(name, contactDetails);
+        } catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
+        }
     }
+
 
     /**
      * Displays all adoptants by fetching them from the AdoptantController.
      * If no adoptants are found, a message is shown to the user.
      */
     private void viewAllAdoptants() {
-        List<Adoptant> adoptants = adoptantController.getAllAdoptants();
-        if (adoptants.isEmpty()) {
-            System.out.println("No adoptants found.");
-        } else {
-            adoptants.forEach(adoptant -> System.out.println(adoptant));
+        try {
+            List<Adoptant> adoptants = adoptantController.getAllAdoptants();
+            if (adoptants.isEmpty()) {
+                System.out.println("No adoptants found.");
+            } else {
+                adoptants.forEach(adoptant -> System.out.println(adoptant));
+            }
+        } catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
         }
     }
 
@@ -111,15 +131,19 @@ public class AdoptantManagement {
      * If the adoptant is not found, a message is shown to the user.
      */
     private void viewAdoptantById() {
-        System.out.print("Enter adoptant ID: ");
-        int adoptantId = scanner.nextInt();
-        scanner.nextLine();  // Consume newline
+        try {
+            System.out.print("Enter adoptant ID: ");
+            int adoptantId = scanner.nextInt();
+            scanner.nextLine();  // Consume newline
 
-        Adoptant adoptant = adoptantController.getAdoptantById(adoptantId);
-        if (adoptant != null) {
-            System.out.println(adoptant);
-        } else {
-            System.out.println("Adoptant not found.");
+            Adoptant adoptant = adoptantController.getAdoptantById(adoptantId);
+            if (adoptant != null) {
+                System.out.println(adoptant);
+            } else {
+                System.out.println("Adoptant not found.");
+            }
+        } catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
         }
     }
 
@@ -128,28 +152,32 @@ public class AdoptantManagement {
      * The user can update the name and contact details of the adoptant.
      */
     private void updateAdoptant() {
-        System.out.print("Enter adoptant ID to update: ");
-        int adoptantId = scanner.nextInt();
-        scanner.nextLine();  // Consume newline
+        try {
+            System.out.print("Enter adoptant ID to update: ");
+            int adoptantId = scanner.nextInt();
+            scanner.nextLine();  // Consume newline
 
-        Adoptant adoptant = adoptantController.getAdoptantById(adoptantId);
-        if (adoptant != null) {
-            System.out.print("Enter new name (leave empty to keep current): ");
-            String name = scanner.nextLine();
-            if (!name.isEmpty()) {
-                adoptant.setName(name);
+            Adoptant adoptant = adoptantController.getAdoptantById(adoptantId);
+            if (adoptant != null) {
+                System.out.print("Enter new name (leave empty to keep current): ");
+                String name = scanner.nextLine();
+                if (!name.isEmpty()) {
+                    adoptant.setName(name);
+                }
+
+                System.out.print("Enter new contact details (leave empty to keep current): ");
+                String contactDetails = scanner.nextLine();
+                if (!contactDetails.isEmpty()) {
+                    adoptant.setContactDetails(contactDetails);
+                }
+
+                adoptantController.updateAdoptant(adoptant);
+                System.out.println("Adoptant updated successfully!");
+            } else {
+                System.out.println("Adoptant not found.");
             }
-
-            System.out.print("Enter new contact details (leave empty to keep current): ");
-            String contactDetails = scanner.nextLine();
-            if (!contactDetails.isEmpty()) {
-                adoptant.setContactDetails(contactDetails);
-            }
-
-            adoptantController.updateAdoptant(adoptant);
-            System.out.println("Adoptant updated successfully!");
-        } else {
-            System.out.println("Adoptant not found.");
+        } catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
         }
     }
 
@@ -157,23 +185,31 @@ public class AdoptantManagement {
      * Deletes an adoptant by their ID using the AdoptantController.
      */
     private void deleteAdoptant() {
-        System.out.print("Enter adoptant ID to delete: ");
-        int adoptantId = scanner.nextInt();
-        scanner.nextLine();  // Consume newline
+        try {
+            System.out.print("Enter adoptant ID to delete: ");
+            int adoptantId = scanner.nextInt();
+            scanner.nextLine();  // Consume newline
 
-        adoptantController.deleteAdoptant(adoptantId);
-        System.out.println("Adoptant deleted successfully!");
+            adoptantController.deleteAdoptant(adoptantId);
+            System.out.println("Adoptant deleted successfully!");
+        } catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
+        }
     }
 
     /**
      * Displays all adoption requests for a specific adoptant by their ID.
      */
     private void viewAdoptionRequests() {
-        System.out.print("Enter adoptant ID to view adoption requests: ");
-        int adoptantId = scanner.nextInt();
-        scanner.nextLine();  // Consume newline
+        try {
+            System.out.print("Enter adoptant ID to view adoption requests: ");
+            int adoptantId = scanner.nextInt();
+            scanner.nextLine();  // Consume newline
 
-        adoptantController.viewAdoptionRequests(adoptantId);
+            adoptantController.viewAdoptionRequests(adoptantId);
+        } catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
+        }
     }
 
     /**
@@ -181,31 +217,43 @@ public class AdoptantManagement {
      * The user must provide both the adoptant ID and the animal ID.
      */
     private void makeAdoptionRequest() {
-        System.out.print("Enter adoptant ID: ");
-        int adoptantId = scanner.nextInt();
+        try {
+            System.out.print("Enter adoptant ID: ");
+            int adoptantId = scanner.nextInt();
 
-        System.out.print("Enter animal ID to adopt: ");
-        int animalId = scanner.nextInt();
-        scanner.nextLine();  // Consume newline
+            System.out.print("Enter animal ID to adopt: ");
+            int animalId = scanner.nextInt();
+            scanner.nextLine();  // Consume newline
 
-        adoptantController.makeAdoptionRequest(adoptantId, animalId);
+            adoptantController.makeAdoptionRequest(adoptantId, animalId);
+        } catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
+        }
     }
 
     /**
      * Displays adoptants who have made a minimum number of adoption requests.
      */
     private void viewAdoptantsWithAdoptionRequests() {
-        System.out.print("Enter minimum number of adoption requests: ");
-        int minRequests = scanner.nextInt();
-        scanner.nextLine();  // Consume newline
+        try {
+            System.out.print("Enter minimum number of adoption requests: ");
+            int minRequests = scanner.nextInt();
+            scanner.nextLine();  // Consume newline
 
-        adoptantController.viewAdoptantsWithAdoptionRequests(minRequests);
+            adoptantController.viewAdoptantsWithAdoptionRequests(minRequests);
+        } catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
+        }
     }
 
     /**
      * Displays adoptants sorted by the total number of adoptions they have made.
      */
     private void viewAdoptantsSortedByTotalAdoptions() {
-        adoptantController.viewAdoptantsSortedByTotalAdoptions();
+        try {
+            adoptantController.viewAdoptantsSortedByTotalAdoptions();
+        } catch (ValidationException e) {
+            System.out.println("Validation Error: " + e.getMessage());
+        }
     }
 }

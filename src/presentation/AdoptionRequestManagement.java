@@ -3,6 +3,7 @@ package presentation;
 import controller.AdoptionRequestController;
 import models.Adoptant;
 import models.AdoptionRequest;
+import exceptions.ValidationException;
 
 import java.util.List;
 import java.util.Scanner;
@@ -42,8 +43,13 @@ public class AdoptionRequestManagement {
             System.out.println("5. Exit");
 
             System.out.print("Choose an option: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();  // Consume newline
+            int choice;
+            try {
+                choice = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+                continue;
+            }
 
             switch (choice) {
                 case 1:
@@ -72,14 +78,18 @@ public class AdoptionRequestManagement {
      * If no adoption requests are found, a message is displayed to the user.
      */
     private void viewAllAdoptionRequests() {
-        List<AdoptionRequest> requests = adoptionRequestController.getAllAdoptionRequests();
-        if (requests.isEmpty()) {
-            System.out.println("No adoption requests found.");
-        } else {
-            System.out.println("\n--- All Adoption Requests ---");
-            for (AdoptionRequest request : requests) {
-                System.out.println(request);
+        try {
+            List<AdoptionRequest> requests = adoptionRequestController.getAllAdoptionRequests();
+            if (requests.isEmpty()) {
+                System.out.println("No adoption requests found.");
+            } else {
+                System.out.println("\n--- All Adoption Requests ---");
+                for (AdoptionRequest request : requests) {
+                    System.out.println(request);
+                }
             }
+        } catch (Exception e) {
+            System.out.println("Error retrieving adoption requests: " + e.getMessage());
         }
     }
 
@@ -88,10 +98,16 @@ public class AdoptionRequestManagement {
      * The adoption request is processed by the AdoptionRequestController.
      */
     private void approveAdoptionRequest() {
-        System.out.print("Enter adoption request ID to approve: ");
-        int requestId = scanner.nextInt();
-        adoptionRequestController.approveAdoptionRequest(requestId); // No need to check return type, as it is void
-        System.out.println("Adoption request approved successfully.");
+        try {
+            System.out.print("Enter adoption request ID to approve: ");
+            int requestId = Integer.parseInt(scanner.nextLine());
+            adoptionRequestController.approveAdoptionRequest(requestId); // No need to check return type, as it is void
+            System.out.println("Adoption request approved successfully.");
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid request ID. Please enter a valid number.");
+        } catch (ValidationException e) {
+            System.out.println("Validation error: " + e.getMessage());
+        }
     }
 
     /**
@@ -99,10 +115,16 @@ public class AdoptionRequestManagement {
      * The adoption request is processed by the AdoptionRequestController.
      */
     private void rejectAdoptionRequest() {
-        System.out.print("Enter adoption request ID to reject: ");
-        int requestId = scanner.nextInt();
-        adoptionRequestController.rejectAdoptionRequest(requestId); // No need to check return type, as it is void
-        System.out.println("Adoption request rejected successfully.");
+        try {
+            System.out.print("Enter adoption request ID to reject: ");
+            int requestId = Integer.parseInt(scanner.nextLine());
+            adoptionRequestController.rejectAdoptionRequest(requestId); // No need to check return type, as it is void
+            System.out.println("Adoption request rejected successfully.");
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid request ID. Please enter a valid number.");
+        } catch (ValidationException e) {
+            System.out.println("Validation error: " + e.getMessage());
+        }
     }
 
     /**
@@ -110,18 +132,22 @@ public class AdoptionRequestManagement {
      * The total number of requests for each adoptant is calculated and displayed.
      */
     private void viewAdoptantsByTotalRequests() {
-        List<Adoptant> adoptants = adoptionRequestController.getAdoptantsByTotalRequests();
-        if (adoptants.isEmpty()) {
-            System.out.println("No adoptants found.");
-        } else {
-            System.out.println("\n--- Adoptants by Total Adoption Requests ---");
-            for (Adoptant adoptant : adoptants) {
-                // Calculate the number of adoption requests for each adoptant
-                long requestCount = adoptionRequestController.getAllAdoptionRequests().stream()
-                        .filter(request -> request.getAdoptant().equals(adoptant))
-                        .count();
-                System.out.println(adoptant.getName() + " has " + requestCount + " adoption requests.");
+        try {
+            List<Adoptant> adoptants = adoptionRequestController.getAdoptantsByTotalRequests();
+            if (adoptants.isEmpty()) {
+                System.out.println("No adoptants found.");
+            } else {
+                System.out.println("\n--- Adoptants by Total Adoption Requests ---");
+                for (Adoptant adoptant : adoptants) {
+                    // Calculate the number of adoption requests for each adoptant
+                    long requestCount = adoptionRequestController.getAllAdoptionRequests().stream()
+                            .filter(request -> request.getAdoptant().equals(adoptant))
+                            .count();
+                    System.out.println(adoptant.getName() + " has " + requestCount + " adoption requests.");
+                }
             }
+        } catch (ValidationException e) {
+            System.out.println("Validation error: " + e.getMessage());
         }
     }
 }

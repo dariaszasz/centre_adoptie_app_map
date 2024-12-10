@@ -1,11 +1,8 @@
-/**
- * Controller class for managing veterinarians.
- * Provides operations to add, retrieve, update, delete, sort, and filter veterinarians.
- */
 package controller;
 
 import models.Veterinarian;
 import service.VeterinarianService;
+import exceptions.EntityNotFoundException;
 
 import java.util.List;
 
@@ -28,8 +25,12 @@ public class VeterinarianController {
      * @return a success message indicating the veterinarian was added
      */
     public String addVeterinarian(Veterinarian veterinarian) {
-        veterinarianService.addVeterinarian(veterinarian);
-        return "Veterinarian added successfully!";
+        try {
+            veterinarianService.addVeterinarian(veterinarian);
+            return "Veterinarian added successfully!";
+        } catch (Exception e) {
+            return "Error adding veterinarian: " + e.getMessage();
+        }
     }
 
     /**
@@ -38,7 +39,16 @@ public class VeterinarianController {
      * @return a list of all veterinarians
      */
     public List<Veterinarian> getAllVeterinarians() {
-        return veterinarianService.getAllVeterinarians();
+        try {
+            List<Veterinarian> veterinarians = veterinarianService.getAllVeterinarians();
+            if (veterinarians.isEmpty()) {
+                System.out.println("No veterinarians found.");
+            }
+            return veterinarians;
+        } catch (Exception e) {
+            System.out.println("Error retrieving veterinarians: " + e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -48,7 +58,19 @@ public class VeterinarianController {
      * @return the veterinarian with the specified ID, or null if not found
      */
     public Veterinarian getVeterinarianById(int id) {
-        return veterinarianService.getVeterinarianById(id);
+        try {
+            Veterinarian veterinarian = veterinarianService.getVeterinarianById(id);
+            if (veterinarian == null) {
+                throw new EntityNotFoundException("Veterinarian with ID " + id + " not found.");
+            }
+            return veterinarian;
+        } catch (EntityNotFoundException e) {
+            System.out.println(e.getMessage());
+            return null;
+        } catch (Exception e) {
+            System.out.println("Error retrieving veterinarian: " + e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -58,8 +80,14 @@ public class VeterinarianController {
      * @return a success message indicating the veterinarian was updated
      */
     public String updateVeterinarian(Veterinarian veterinarian) {
-        veterinarianService.updateVeterinarian(veterinarian);
-        return "Veterinarian updated successfully!";
+        try {
+            veterinarianService.updateVeterinarian(veterinarian);
+            return "Veterinarian updated successfully!";
+        } catch (EntityNotFoundException e) {
+            return "Error updating veterinarian: " + e.getMessage();
+        } catch (Exception e) {
+            return "Error updating veterinarian: " + e.getMessage();
+        }
     }
 
     /**
@@ -69,8 +97,18 @@ public class VeterinarianController {
      * @return a success message indicating the veterinarian was deleted
      */
     public String deleteVeterinarian(int id) {
-        veterinarianService.deleteVeterinarian(id);
-        return "Veterinarian deleted successfully!";
+        try {
+            boolean deleted = veterinarianService.deleteVeterinarian(id);
+            if (deleted) {
+                return "Veterinarian deleted successfully!";
+            } else {
+                throw new EntityNotFoundException("Veterinarian with ID " + id + " not found.");
+            }
+        } catch (EntityNotFoundException e) {
+            return "Error deleting veterinarian: " + e.getMessage();
+        } catch (Exception e) {
+            return "Error deleting veterinarian: " + e.getMessage();
+        }
     }
 
     /**
@@ -79,7 +117,12 @@ public class VeterinarianController {
      * @return a list of veterinarians sorted by specialization
      */
     public List<Veterinarian> sortVeterinariansBySpecialization() {
-        return veterinarianService.sortVeterinariansBySpecialization();
+        try {
+            return veterinarianService.sortVeterinariansBySpecialization();
+        } catch (Exception e) {
+            System.out.println("Error sorting veterinarians by specialization: " + e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -89,6 +132,11 @@ public class VeterinarianController {
      * @return a list of veterinarians with the specified specialization
      */
     public List<Veterinarian> filterVeterinariansBySpecialization(String specialization) {
-        return veterinarianService.filterVeterinariansBySpecialization(specialization);
+        try {
+            return veterinarianService.filterVeterinariansBySpecialization(specialization);
+        } catch (Exception e) {
+            System.out.println("Error filtering veterinarians by specialization: " + e.getMessage());
+            return null;
+        }
     }
 }

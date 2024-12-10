@@ -1,5 +1,6 @@
 package repository;
 
+import exceptions.DatabaseException;
 import java.io.Serializable;
 import java.util.List;
 
@@ -13,10 +14,10 @@ public interface IRepository<T extends Serializable> {
 
     /**
      * Adds an entity to the repository.
-     *
      * @param entity The entity to be added. This cannot be null.
+     * @throws DatabaseException If an error occurs while adding the entity, such as duplicate entity ID.
      */
-    void add(T entity);
+    void add(T entity) throws DatabaseException;
 
     /**
      * Updates an existing entity in the repository.
@@ -24,16 +25,18 @@ public interface IRepository<T extends Serializable> {
      *
      * @param entity The updated entity that will replace the existing entity.
      *               This cannot be null.
+     * @throws DatabaseException If an error occurs while updating the entity, such as entity not found.
      */
-    void update(T entity);
+    void update(T entity) throws DatabaseException;
 
     /**
      * Deletes an entity from the repository based on its ID.
      *
      * @param id The ID of the entity to be deleted.
      *           If no entity with this ID exists, no deletion occurs.
+     * @throws DatabaseException If an error occurs while deleting the entity, such as entity not found.
      */
-    void delete(int id);
+    void delete(int id) throws DatabaseException;
 
     /**
      * Retrieves an entity from the repository based on its ID.
@@ -57,4 +60,5 @@ public interface IRepository<T extends Serializable> {
      * @return A unique ID for a new entity.
      */
     int generateUniqueId();
+    List<T> findByStatus(String status);
 }

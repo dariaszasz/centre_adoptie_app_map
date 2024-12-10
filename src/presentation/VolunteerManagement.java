@@ -2,6 +2,7 @@ package presentation;
 
 import controller.VolunteerController;
 import models.Volunteer;
+import exceptions.ValidationException;
 
 import java.util.Scanner;
 
@@ -41,18 +42,13 @@ public class VolunteerManagement {
 
             switch (choice) {
                 case 1:
-                    // Atribuie un animal unui voluntar
+                    // Add a new volunteer
                     addVolunteer(scanner);
                     break;
 
                 case 2:
-                    // Atribuie un animal unui voluntar
-                    System.out.println("Enter Volunteer ID: ");
-                    int volunteerId = scanner.nextInt();
-                    System.out.println("Enter Animal ID: ");
-                    int animalId = scanner.nextInt();
-                    String response = volunteerController.assignAnimalToVolunteer(volunteerId, animalId);
-                    System.out.println(response);
+                    // Assign an animal to a volunteer
+                    assignAnimalToVolunteer(scanner);
                     break;
 
                 case 3:
@@ -71,29 +67,62 @@ public class VolunteerManagement {
      * @param scanner The scanner object used to read user input.
      */
     private void addVolunteer(Scanner scanner) {
-        System.out.println("\n--- Add New Volunteer ---");
-        // Generarea ID-ului unic pentru voluntar
-        int id = volunteerController.generateUniqueId();
+        try {
+            System.out.println("\n--- Add New Volunteer ---");
 
-        System.out.print("Enter Volunteer Name: ");
-        scanner.nextLine(); // Consumă linia rămasă
-        String name = scanner.nextLine();
+            // Generate unique ID for the volunteer
+            int id = volunteerController.generateUniqueId();
 
-        System.out.print("Enter Volunteer Contact Details: ");
-        String contactDetails = scanner.nextLine();
+            System.out.print("Enter Volunteer Name: ");
+            scanner.nextLine(); // Consume leftover newline
+            String name = scanner.nextLine();
+            if (name.isEmpty()) throw new ValidationException("Name cannot be empty.");
 
-        System.out.print("Enter Volunteer Experience: ");
-        String experience = scanner.nextLine();
+            System.out.print("Enter Volunteer Contact Details: ");
+            String contactDetails = scanner.nextLine();
+            if (contactDetails.isEmpty()) throw new ValidationException("Contact details cannot be empty.");
 
-        // Crează un nou obiect Volunteer cu ID-ul generat
-        Volunteer volunteer = new Volunteer(id, name, contactDetails, experience);
+            System.out.print("Enter Volunteer Experience: ");
+            String experience = scanner.nextLine();
+            if (experience.isEmpty()) throw new ValidationException("Experience cannot be empty.");
 
-        // Adaugă voluntarul folosind controller-ul
-        volunteerController.addVolunteer(volunteer);
-        System.out.println("Volunteer added successfully.");
+            // Create a new Volunteer object with the generated ID
+            Volunteer volunteer = new Volunteer(id, name, contactDetails, experience);
 
-        // Debug print: Verifică dacă voluntarul a fost adăugat
-        System.out.println("Current Volunteers: ");
-        volunteerController.getAllVolunteers().forEach(v -> System.out.println(v.getId() + ": " + v.getName()));
+            // Add the volunteer using the controller
+            volunteerController.addVolunteer(volunteer);
+            System.out.println("Volunteer added successfully.");
+
+            // Debug print: Verify if the volunteer was added
+            System.out.println("Current Volunteers: ");
+            volunteerController.getAllVolunteers().forEach(v -> System.out.println(v.getId() + ": " + v.getName()));
+
+        } catch (ValidationException e) {
+            System.out.println("Validation error: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Prompts the user to assign an animal to a volunteer.
+     * It ensures that both volunteer and animal IDs are valid before performing the assignment.
+     *
+     * @param scanner The scanner object used to read user input.
+     */
+    private void assignAnimalToVolunteer(Scanner scanner) {
+        try {
+            System.out.print("Enter Volunteer ID: ");
+            int volunteerId = scanner.nextInt();
+            if (volunteerId <= 0) throw new ValidationException("Invalid Volunteer ID. ID must be greater than 0.");
+
+            System.out.print("Enter Animal ID: ");
+            int animalId = scanner.nextInt();
+            if (animalId <= 0) throw new ValidationException("Invalid Animal ID. ID must be greater than 0.");
+
+            String response = volunteerController.assignAnimalToVolunteer(volunteerId, animalId);
+            System.out.println(response);
+
+        } catch (ValidationException e) {
+            System.out.println("Validation error: " + e.getMessage());
+        }
     }
 }
