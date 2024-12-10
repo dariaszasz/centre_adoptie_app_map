@@ -103,4 +103,18 @@ public class InMemoryRepository<T extends BaseEntity> implements IRepository<T> 
     public int generateUniqueId() {
         return currentId++;
     }
+
+    @Override
+    public List<T> findByStatus(String status) {
+        List<T> result = new ArrayList<>();
+
+        for (T entity : entities) {
+            if (entity.getStatus() != null && entity.getStatus().equals(status)) {
+                result.add(entity);  // Adaugă entitatea care se potrivește cu statusul
+            }
+        }
+
+        return result;
+    }
+
 }

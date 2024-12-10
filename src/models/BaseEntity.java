@@ -9,6 +9,7 @@ import java.io.Serializable;
  */
 public abstract class BaseEntity implements Serializable {
     private int id;
+    private String status;
 
     /**
      * Constructor for creating an instance of BaseEntity with a specified ID.
@@ -35,5 +36,13 @@ public abstract class BaseEntity implements Serializable {
      */
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

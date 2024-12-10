@@ -53,13 +53,26 @@ public class DBRepository<T extends Serializable> implements IRepository<T> {
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             for (int i = 0; i < values.size(); i++) {
-                statement.setObject(i + 1, values.get(i));
+                Object value = values.get(i);
+                if (value instanceof Integer) {
+                    statement.setInt(i + 1, (Integer) value);
+                } else if (value instanceof String) {
+                    statement.setString(i + 1, (String) value);
+                } else if (value instanceof Double) {
+                    statement.setDouble(i + 1, (Double) value);
+                } else if (value instanceof Date) {
+                    statement.setDate(i + 1, (Date) value);
+                } else {
+                    statement.setObject(i + 1, value); // For other types
+                }
             }
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Failed to add entity", e);
         }
     }
+
+
 
     @Override
     public void update(T entity) {
@@ -181,4 +194,31 @@ public class DBRepository<T extends Serializable> implements IRepository<T> {
 
         return 1; // Return 1 if no entities exist in the table
     }
+
+    @Override
+    public List<T> findByStatus(String status) {
+        List<T> entities = new ArrayList<>();
+        String tableName = entityType.getSimpleName().toLowerCase();  // Obține numele tabelului
+        String sql = String.format("SELECT * FROM %s WHERE status = ?", tableName);  // Interogare SQL pentru status
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, status);  // Setează valoarea parametrului
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                T entity = entityType.getDeclaredConstructor().newInstance();  // Crează entitatea
+                for (Field field : entityType.getDeclaredFields()) {
+                    field.setAccessible(true);
+                    Object value = resultSet.getObject(field.getName());  // Obține valoarea din ResultSet
+                    field.set(entity, value);  // Setează valoarea în entitate
+                }
+                entities.add(entity);  // Adaugă entitatea în listă
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to retrieve entities by status", e);
+        }
+
+        return entities;  // Returnează lista de entități
+    }
+
 }
