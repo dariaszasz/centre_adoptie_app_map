@@ -11,20 +11,31 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Generic repository implementation for managing database operations.
+ * Implementare generică a unui repository pentru gestionarea operațiunilor de bază de date.
  *
- * @param <T> The type of the entity that extends {@link Serializable}.
+ * @param <T> Tipul entității care extinde {@link BaseEntity}.
  */
-public class DBRepository<T extends BaseEntity> implements IRepository<T>{
+public class DBRepository<T extends BaseEntity> implements IRepository<T> {
 
     private final Connection connection;
     private final Class<T> entityType;
 
+    /**
+     * Constructorul repository-ului.
+     *
+     * @param connection Conexiunea la baza de date.
+     * @param entityType Tipul entității gestionate de repository.
+     */
     public DBRepository(Connection connection, Class<T> entityType) {
         this.connection = connection;
         this.entityType = entityType;
     }
 
+    /**
+     * Adaugă o entitate în baza de date.
+     *
+     * @param entity Entitatea care urmează să fie adăugată.
+     */
     @Override
     public void add(T entity) {
         String tableName = entity.getTableName();
@@ -55,7 +66,11 @@ public class DBRepository<T extends BaseEntity> implements IRepository<T>{
         }
     }
 
-
+    /**
+     * Actualizează o entitate existentă în baza de date.
+     *
+     * @param entity Entitatea care urmează să fie actualizată.
+     */
     @Override
     public void update(T entity) {
         String tableName = entityType.getSimpleName().toLowerCase();
@@ -96,6 +111,11 @@ public class DBRepository<T extends BaseEntity> implements IRepository<T>{
         }
     }
 
+    /**
+     * Șterge o entitate din baza de date pe baza ID-ului.
+     *
+     * @param id ID-ul entității care trebuie ștearsă.
+     */
     @Override
     public void delete(int id) {
         String tableName = entityType.getSimpleName().toLowerCase();
@@ -109,6 +129,12 @@ public class DBRepository<T extends BaseEntity> implements IRepository<T>{
         }
     }
 
+    /**
+     * Obține o entitate după ID din baza de date.
+     *
+     * @param id ID-ul entității care urmează să fie returnată.
+     * @return Entitatea corespunzătoare ID-ului sau null dacă nu a fost găsită.
+     */
     @Override
     public T getById(int id) {
         String tableName = entityType.getSimpleName().toLowerCase();
@@ -134,6 +160,11 @@ public class DBRepository<T extends BaseEntity> implements IRepository<T>{
         return null;
     }
 
+    /**
+     * Obține toate entitățile din tabela corespunzătoare.
+     *
+     * @return O listă cu toate entitățile din baza de date.
+     */
     @Override
     public List<T> getAll() {
         List<T> entities = new ArrayList<>();
@@ -159,6 +190,11 @@ public class DBRepository<T extends BaseEntity> implements IRepository<T>{
         return entities;
     }
 
+    /**
+     * Generează un ID unic pentru o entitate nouă.
+     *
+     * @return Un ID unic generat pe baza valorii maxime a ID-urilor din tabel.
+     */
     @Override
     public int generateUniqueId() {
         String sql = "SELECT ISNULL(MAX(id), 0) + 1 AS nextId FROM adoptant";
@@ -173,31 +209,35 @@ public class DBRepository<T extends BaseEntity> implements IRepository<T>{
         throw new RuntimeException("Failed to generate unique ID: No result from database");
     }
 
-
+    /**
+     * Căută entitățile cu un anumit status.
+     *
+     * @param status Statusul pe care îl caută în baza de date.
+     * @return O listă cu entitățile care au statusul dat.
+     */
     @Override
     public List<T> findByStatus(String status) {
         List<T> entities = new ArrayList<>();
-        String tableName = entityType.getSimpleName().toLowerCase();  // Obține numele tabelului
-        String sql = String.format("SELECT * FROM %s WHERE status = ?", tableName);  // Interogare SQL pentru status
+        String tableName = entityType.getSimpleName().toLowerCase();
+        String sql = String.format("SELECT * FROM %s WHERE status = ?", tableName);
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, status);  // Setează valoarea parametrului
+            statement.setString(1, status);
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                T entity = entityType.getDeclaredConstructor().newInstance();  // Crează entitatea
+                T entity = entityType.getDeclaredConstructor().newInstance();
                 for (Field field : entityType.getDeclaredFields()) {
                     field.setAccessible(true);
-                    Object value = resultSet.getObject(field.getName());  // Obține valoarea din ResultSet
-                    field.set(entity, value);  // Setează valoarea în entitate
+                    Object value = resultSet.getObject(field.getName());
+                    field.set(entity, value);
                 }
-                entities.add(entity);  // Adaugă entitatea în listă
+                entities.add(entity);
             }
         } catch (Exception e) {
             throw new RuntimeException("Failed to retrieve entities by status", e);
         }
 
-        return entities;  // Returnează lista de entități
+        return entities;
     }
-
 }
