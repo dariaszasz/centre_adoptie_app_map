@@ -2,6 +2,9 @@ package models;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import models.interfaces.IStatusEntity;
 
 /**
@@ -89,5 +92,21 @@ public class AdoptionRequest extends BaseEntity implements Serializable, IStatus
     public String toString() {
         return "Request ID: " + id + ", Adoptant: " + adoptant.getName() + ", Animal: " + animal.getName() +
                 ", Date: " + requestDate + ", Status: " + status;
+    }
+
+    @Override
+    public Map<String, Object> getColumnValues() {
+        Map<String, Object> columnValues = new HashMap<>();
+        columnValues.put("id", getId()); // ID-ul entității
+        columnValues.put("adoptantId", adoptant.getId()); // ID-ul adoptantului
+        columnValues.put("animalId", animal.getId()); // ID-ul animalului
+        columnValues.put("requestDate", requestDate); // Data cererii
+        columnValues.put("status", getStatus()); // Statusul entității (din BaseEntity)
+        return columnValues;
+    }
+
+    @Override
+    public String getTableName() {
+        return "adoption_request"; // Numele tabelului din baza de date
     }
 }

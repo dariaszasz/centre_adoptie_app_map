@@ -1,17 +1,21 @@
 package repository;
 
+import models.BaseEntity;
+
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Generic repository implementation for managing database operations.
  *
  * @param <T> The type of the entity that extends {@link Serializable}.
  */
-public class DBRepository<T extends Serializable> implements IRepository<T> {
+public class DBRepository<T extends BaseEntity> implements IRepository<T>{
 
     private final Connection connection;
     private final Class<T> entityType;
@@ -23,55 +27,33 @@ public class DBRepository<T extends Serializable> implements IRepository<T> {
 
     @Override
     public void add(T entity) {
-        String tableName = entityType.getSimpleName().toLowerCase();
-        Field[] fields = entityType.getDeclaredFields();
+        String tableName = entity.getTableName();
+        Map<String, Object> columnValues = entity.getColumnValues();
 
-        StringBuilder columns = new StringBuilder();
-        StringBuilder placeholders = new StringBuilder();
-        List<Object> values = new ArrayList<>();
-
-        for (Field field : fields) {
-            if (!field.getName().equals("id")) { // Exclude 'id' field for insert
-                field.setAccessible(true);
-                columns.append(field.getName()).append(", ");
-                placeholders.append("?, ");
-                try {
-                    values.add(field.get(entity));
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException("Failed to access field value", e);
-                }
-            }
-        }
-
-        // Remove trailing commas
-        if (columns.length() > 0) {
-            columns.setLength(columns.length() - 2);
-            placeholders.setLength(placeholders.length() - 2);
-        }
-
-        String sql = String.format("INSERT INTO %s (%s) VALUES (%s)", tableName, columns, placeholders);
+        // Construiește interogarea SQL
+        String columns = String.join(", ", columnValues.keySet());
+        String placeholders = columnValues.keySet().stream()
+                .map(col -> "?")
+                .collect(Collectors.joining(", "));
+        String sql = "INSERT INTO " + tableName + " (" + columns + ") VALUES (" + placeholders + ")";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            for (int i = 0; i < values.size(); i++) {
-                Object value = values.get(i);
-                if (value instanceof Integer) {
-                    statement.setInt(i + 1, (Integer) value);
-                } else if (value instanceof String) {
-                    statement.setString(i + 1, (String) value);
-                } else if (value instanceof Double) {
-                    statement.setDouble(i + 1, (Double) value);
-                } else if (value instanceof Date) {
-                    statement.setDate(i + 1, (Date) value);
+            int index = 1;
+            for (Object value : columnValues.values()) {
+                if (value == null) {
+                    statement.setNull(index, java.sql.Types.NULL);
                 } else {
-                    statement.setObject(i + 1, value); // For other types
+                    statement.setObject(index, value);
                 }
+                index++;
             }
+
             statement.executeUpdate();
+            System.out.println("Entity added to " + tableName);
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to add entity", e);
+            throw new RuntimeException("Failed to add entity to " + tableName, e);
         }
     }
-
 
 
     @Override
@@ -179,21 +161,18 @@ public class DBRepository<T extends Serializable> implements IRepository<T> {
 
     @Override
     public int generateUniqueId() {
-        String tableName = entityType.getSimpleName().toLowerCase();
-        String sql = String.format("SELECT MAX(id) FROM %s", tableName);
-
+        String sql = "SELECT ISNULL(MAX(id), 0) + 1 AS nextId FROM adoptant";
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
-
             if (resultSet.next()) {
-                return resultSet.getInt(1) + 1;
+                return resultSet.getInt("nextId");
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to generate unique ID", e);
         }
-
-        return 1; // Return 1 if no entities exist in the table
+        throw new RuntimeException("Failed to generate unique ID: No result from database");
     }
+
 
     @Override
     public List<T> findByStatus(String status) {

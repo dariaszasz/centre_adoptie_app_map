@@ -1,6 +1,7 @@
 package models;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * This class serves as a base class for entities that require an ID.
@@ -45,4 +46,18 @@ public abstract class BaseEntity implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    /**
+     * Returns the table name for the entity.
+     * Subclasses must override this method to specify the table name.
+     */
+    public abstract String getTableName();
+
+    /**
+     * Returns a map of column names and their values for this entity.
+     * Subclasses must override this method to specify the columns and their values.
+     *
+     * @return a map of column names and their values
+     */
+    public abstract Map<String, Object> getColumnValues();
 }

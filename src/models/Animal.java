@@ -3,6 +3,8 @@ package models;
 import models.interfaces.IStatusEntity;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents an animal entity in the system.
@@ -171,5 +173,21 @@ public class Animal extends BaseEntity implements IStatusEntity, Serializable {
      */
     public void setAssignedVolunteer(Volunteer assignedVolunteer) {
         this.assignedVolunteer = assignedVolunteer;
+    }
+
+    @Override
+    public Map<String, Object> getColumnValues() {
+        // Returnează valorile coloanelor pentru acest animal
+        Map<String, Object> columnValues = new HashMap<>();
+        columnValues.put("id", getId()); // ID-ul animalului (din BaseEntity)
+        columnValues.put("name", name);  // Numele animalului
+        columnValues.put("species", animalType);  // Specia animalului
+        columnValues.put("age", age);  // Vârsta animalului
+        return columnValues;
+    }
+
+    @Override
+    public String getTableName() {
+        return "animal"; // Numele tabelului din baza de date
     }
 }

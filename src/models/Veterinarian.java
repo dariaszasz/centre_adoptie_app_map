@@ -1,7 +1,9 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class represents a Veterinarian, which is a person with a specialization
@@ -73,5 +75,20 @@ public class Veterinarian extends Person {
     @Override
     public String toString() {
         return super.toString() + ", Specialization: " + specialization + ", Shelters: " + shelters.size();
+    }
+
+    @Override
+    public Map<String, Object> getColumnValues() {
+        Map<String, Object> columnValues = new HashMap<>();
+        columnValues.put("id", getId());
+        columnValues.put("name", getName());
+        columnValues.put("specialty", specialization);
+        columnValues.put("status", getStatus());
+        return columnValues;
+    }
+
+    @Override
+    public String getTableName() {
+        return "veterinarian";
     }
 }

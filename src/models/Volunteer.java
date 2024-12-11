@@ -1,7 +1,10 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import models.interfaces.IStatusEntity;
 
 /**
@@ -111,5 +114,21 @@ public class Volunteer extends Person implements IStatusEntity{
      */
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public Map<String, Object> getColumnValues() {
+        // Returnează valorile coloanelor pentru acest voluntar
+        Map<String, Object> columnValues = new HashMap<>();
+        columnValues.put("id", getId()); // ID-ul voluntarului (din BaseEntity)
+        columnValues.put("name", getName());  // Numele voluntarului
+        columnValues.put("experience", experience);  // Rolul voluntarului
+        columnValues.put("contactDetails", getContactDetails());  // Detaliile de contact
+        return columnValues;
+    }
+
+    @Override
+    public String getTableName() {
+        return "volunteer"; // Numele tabelului din baza de date
     }
 }

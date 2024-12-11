@@ -3,7 +3,9 @@ package models;
 import models.interfaces.IStatusEntity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class representing an adopter (Adoptant). It extends the Person class and includes
@@ -75,4 +77,18 @@ public class Adoptant extends Person implements IStatusEntity {
         this.status = status;
     }
 
+    @Override
+    public Map<String, Object> getColumnValues() {
+        Map<String, Object> columnValues = new HashMap<>();
+        columnValues.put("id", getId()); // Valoarea ID-ului (din BaseEntity)
+        columnValues.put("name", getName()); // Numele adoptantului
+        columnValues.put("contactDetails", getContactDetails()); // Detaliile de contact
+        columnValues.put("status", getStatus()); // Statusul (din BaseEntity)
+        return columnValues;
+    }
+
+    @Override
+    public String getTableName() {
+        return "adoptant"; // Numele tabelului din baza de date pentru Adoptant
+    }
 }
